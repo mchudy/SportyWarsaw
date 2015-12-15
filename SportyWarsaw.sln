@@ -5,6 +5,8 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SportyWarsaw.WebApi", "SportyWarsaw.WebApi\SportyWarsaw.WebApi.csproj", "{2BB61C2C-E48C-49B7-93AC-FFAA4F551037}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SportyWarsaw.Domain", "SportyWarsaw.Domain\SportyWarsaw.Domain.csproj", "{CA2FB874-BDD5-4E24-A27C-64662D8E0B80}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{2BB61C2C-E48C-49B7-93AC-FFAA4F551037}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2BB61C2C-E48C-49B7-93AC-FFAA4F551037}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2BB61C2C-E48C-49B7-93AC-FFAA4F551037}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA2FB874-BDD5-4E24-A27C-64662D8E0B80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA2FB874-BDD5-4E24-A27C-64662D8E0B80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA2FB874-BDD5-4E24-A27C-64662D8E0B80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA2FB874-BDD5-4E24-A27C-64662D8E0B80}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
