@@ -15,5 +15,7 @@ namespace SportyWarsaw.Domain.Entities
         public virtual SportsFacility SportsFacility { get; set; }
         public SportType SportType { get; set; }
         public decimal? Cost { get; set; }
+        public string Description { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
     }
 }
