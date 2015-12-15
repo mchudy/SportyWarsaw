@@ -63,7 +63,9 @@
     <Compile Include="Entities\SportsFacility.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Enums\SportType.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SportyWarsawContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
