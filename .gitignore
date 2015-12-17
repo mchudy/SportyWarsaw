@@ -210,3 +210,6 @@ FakesAssemblies/
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
+
+# Secret settings
+SportyWarsaw.WebApi/AppSettingsSecrets.config

@@ -6,7 +6,7 @@
         Tennis,
         TableTennis,
         Basketball,
-        Voleyball,
+        Volleyball,
         Swimming,
         Handball,
         Badminton,
