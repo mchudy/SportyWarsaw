@@ -1,16 +1,10 @@
 ﻿using Autofac;
 using Autofac.Integration.WebApi;
-using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
-using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.DataProtection;
 using Owin;
 using SportyWarsaw.Domain;
-using SportyWarsaw.Domain.Entities;
-using SportyWarsaw.WebApi.Infrastructure;
-using SportyWarsaw.WebApi.Providers;
 using System.Reflection;
-using System.Web;
 using System.Web.Http;
 
 [assembly: OwinStartup(typeof(SportyWarsaw.WebApi.Startup))]
@@ -40,23 +34,9 @@ namespace SportyWarsaw.WebApi
         {
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
             builder.RegisterAssemblyModules(typeof(SportyWarsawContext).Assembly);
-
-            builder.RegisterType<ApplicationUserStore>()
-                .As<IUserStore<User>>()
-                .InstancePerRequest();
-
-            builder.RegisterType<ApplicationUserManager>()
-                .AsSelf()
-                .InstancePerRequest();
-
-            builder.Register<IAuthenticationManager>(c => HttpContext.Current.GetOwinContext().Authentication)
-                .InstancePerRequest();
+            builder.RegisterAssemblyModules(Assembly.GetExecutingAssembly());
             builder.Register<IDataProtectionProvider>(c => app.GetDataProtectionProvider())
                 .InstancePerRequest();
-
-            builder.RegisterType<ApplicationOAuthProvider>()
-                .AsImplementedInterfaces()
-                .WithParameter("publicClientId", "self");
         }
     }
 }
