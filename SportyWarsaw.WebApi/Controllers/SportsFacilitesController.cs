@@ -11,7 +11,12 @@ namespace SportyWarsaw.WebApi.Controllers
 {
     public class SportsFacilitiesController : ApiController
     {
-        private SportyWarsawContext context = new SportyWarsawContext();
+        private SportyWarsawContext context;
+
+        public SportsFacilitiesController(SportyWarsawContext context)
+        {
+            this.context = context;
+        }
 
         public async Task<IHttpActionResult> Get(int id)
         {
