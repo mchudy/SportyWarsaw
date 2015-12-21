@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using SportyWarsaw.Domain.Enums;
+using System.Collections.Generic;
 
 namespace SportyWarsaw.Domain.Entities
 {
@@ -13,5 +14,7 @@ namespace SportyWarsaw.Domain.Entities
         public string PhoneNumber { get; set; }
         public string Website { get; set; }
         public IList<string> Emails { get; set; }
+        public Position Position { get; set; }
+        public SportsFacilityType Type { get; set; }
     }
 }
