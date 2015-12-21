@@ -1,4 +1,6 @@
-﻿using SportyWarsaw.Domain.Entities;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using SportyWarsaw.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -16,12 +18,13 @@ namespace SportyWarsaw.Domain.Data
         private readonly string apiUsername = ConfigurationManager.AppSettings["BihapiUsername"];
         private readonly string apiPassword = ConfigurationManager.AppSettings["BihapiPassword"];
 
-        private SportsFacilitiesParser parser = new SportsFacilitiesParser();
+        private SportsFacilityConverter converter = new SportsFacilityConverter();
 
         public async Task<IEnumerable<SportsFacility>> GetSportsFacilities()
         {
             var json = await GetJson("sportFields");
-            return parser.ParseSportsFacilities(json);
+            var data = JObject.Parse(json)["data"].ToString();
+            return JsonConvert.DeserializeObject<IEnumerable<SportsFacility>>(data);
         }
 
         private async Task<string> GetJson(string requestUri)

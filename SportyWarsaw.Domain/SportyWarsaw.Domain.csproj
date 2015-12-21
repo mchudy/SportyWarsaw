@@ -97,7 +97,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\DataDownloader.cs" />
-    <Compile Include="Data\SportsFacilitiesParser.cs" />
+    <Compile Include="Data\SportsFacilityConverter.cs" />
     <Compile Include="DomainModule.cs" />
     <Compile Include="Entities\Comment.cs" />
     <Compile Include="Entities\Position.cs" />

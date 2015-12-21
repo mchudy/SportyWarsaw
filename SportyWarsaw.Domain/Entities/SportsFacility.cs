@@ -1,8 +1,11 @@
-﻿using SportyWarsaw.Domain.Enums;
+﻿using Newtonsoft.Json;
+using SportyWarsaw.Domain.Data;
+using SportyWarsaw.Domain.Enums;
 using System.Collections.Generic;
 
 namespace SportyWarsaw.Domain.Entities
 {
+    [JsonConverter(typeof(SportsFacilityConverter))]
     public class SportsFacility
     {
         public int Id { get; set; }
@@ -13,8 +16,8 @@ namespace SportyWarsaw.Domain.Entities
         public string AdministrativeUnit { get; set; }
         public string PhoneNumber { get; set; }
         public string Website { get; set; }
-        public IList<string> Emails { get; set; }
-        public Position Position { get; set; }
+        public IList<string> Emails { get; set; } = new List<string>();
+        public Position Position { get; set; } = new Position();
         public SportsFacilityType Type { get; set; }
     }
 }

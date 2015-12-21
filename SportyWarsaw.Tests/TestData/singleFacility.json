@@ -1,0 +1,51 @@
+﻿{
+  "geometry": {
+    "type": "ShapePoint",
+    "coordinates": {
+      "lat": "52.249991",
+      "lon": "21.035679"
+    }
+  },
+  "properties": [
+    {
+      "key": "ULICA",
+      "value": "Jagiellońska"
+    },
+    {
+      "key": "NUMER",
+      "value": "7"
+    },
+    {
+      "key": "OPIS",
+      "value": "DOSiR"
+    },
+    {
+      "key": "DZIELNICA",
+      "value": "Praga Północ"
+    },
+    {
+      "key": "JEDN_ADM",
+      "value": "Warszawa"
+    },
+    {
+      "key": "TEL_FAX",
+      "value": "22 619 81 38 / brak"
+    },
+    {
+      "key": "WWW",
+      "value": "http://www.dosir.waw.pl/"
+    },
+    {
+      "key": "MAIL1",
+      "value": "mailto:sekretariat.jagiellonska@dosir.waw.pl"
+    },
+    {
+      "key": "MAIL2",
+      "value": " "
+    },
+    {
+      "key": "AKTU_DAN",
+      "value": "Sierpień 2014"
+    }
+  ]
+}
