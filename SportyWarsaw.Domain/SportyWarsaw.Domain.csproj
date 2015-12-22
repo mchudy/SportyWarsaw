@@ -96,7 +96,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\DataDownloader.cs" />
+    <Compile Include="Data\ISportsFacilitiesDownloader.cs" />
+    <Compile Include="Data\SportsFacilitiesDownloader.cs" />
     <Compile Include="Data\SportsFacilityConverter.cs" />
     <Compile Include="DomainModule.cs" />
     <Compile Include="Entities\Comment.cs" />

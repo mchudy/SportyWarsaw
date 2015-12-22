@@ -43,7 +43,7 @@ namespace SportyWarsaw.Domain.Data
                 if (result)
                 {
                     facility.GetType().GetProperty(mappings[key])
-                                      .SetValue(facility, value);
+                                      .SetValue(facility, Uri.UnescapeDataString(value));
                 }
                 else if (key == "TEL_FAX")
                 {
@@ -91,7 +91,7 @@ namespace SportyWarsaw.Domain.Data
 
         public override bool CanConvert(Type objectType)
         {
-            throw new System.NotImplementedException();
+            return objectType == typeof(SportsFacility);
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

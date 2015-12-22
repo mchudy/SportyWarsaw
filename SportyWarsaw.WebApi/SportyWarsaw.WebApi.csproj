@@ -183,6 +183,7 @@
     </Compile>
     <Compile Include="Infrastructure\IdentityModule.cs" />
     <Compile Include="Models\RegisterAccountModel.cs" />
+    <Compile Include="Models\SportsFacilityModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Startup.cs" />

@@ -1,3 +1,5 @@
+using SportyWarsaw.Domain.Data;
+
 namespace SportyWarsaw.Domain.Migrations
 {
     using System.Data.Entity.Migrations;
@@ -9,9 +11,14 @@ namespace SportyWarsaw.Domain.Migrations
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(SportyWarsaw.Domain.SportyWarsawContext context)
+        protected override void Seed(SportyWarsawContext context)
         {
-
+            var facilities = new SportsFacilitiesDownloader().GetSportsFacilities().Result;
+            foreach (var facility in facilities)
+            {
+                context.SportsFacilities.AddOrUpdate(facility);
+            }
+            context.SaveChanges();
         }
     }
 }
