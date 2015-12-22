@@ -15,7 +15,7 @@ namespace SportyWarsaw.Domain.Entities
         public string District { get; set; }
         public string PhoneNumber { get; set; }
         public string Website { get; set; }
-        public IList<string> Emails { get; set; } = new List<string>();
+        public IList<EmailAddress> Emails { get; set; } = new List<EmailAddress>();
         public Position Position { get; set; } = new Position();
         public SportsFacilityType Type { get; set; }
     }

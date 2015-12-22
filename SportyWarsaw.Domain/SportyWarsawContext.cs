@@ -14,5 +14,6 @@ namespace SportyWarsaw.Domain
         public IDbSet<SportsFacility> SportsFacilities { get; set; }
         public IDbSet<Comment> Comments { get; set; }
         public IDbSet<Meeting> Meetings { get; set; }
+        public IDbSet<EmailAddress> EmailAddresses { get; set; }
     }
 }

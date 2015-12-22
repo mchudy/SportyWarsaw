@@ -21,7 +21,6 @@ namespace SportyWarsaw.Tests
             Assert.Equal("Jagiellońska", facility.Street);
             Assert.Equal("DOSiR", facility.Description);
             Assert.Equal("Praga Północ", facility.District);
-            Assert.Equal("Warszawa", facility.AdministrativeUnit);
             Assert.Equal("http://www.dosir.waw.pl/", facility.Website);
             Assert.Equal("7", facility.Number);
         }
@@ -89,7 +88,7 @@ namespace SportyWarsaw.Tests
             SportsFacility facility = JsonConvert.DeserializeObject<SportsFacility>(json);
 
             Assert.Equal(1, facility.Emails.Count);
-            Assert.Equal("sekretariat.jagiellonska@dosir.waw.pl", facility.Emails[0]);
+            Assert.Equal("sekretariat.jagiellonska@dosir.waw.pl", facility.Emails[0].Email);
         }
 
         [Fact]
@@ -110,8 +109,8 @@ namespace SportyWarsaw.Tests
             SportsFacility facility = JsonConvert.DeserializeObject<SportsFacility>(json);
 
             Assert.Equal(2, facility.Emails.Count);
-            Assert.Equal("sekretariat.jagiellonska@dosir.waw.pl", facility.Emails[0]);
-            Assert.Equal("sekretariat2.jagiellonska@dosir.waw.pl", facility.Emails[1]);
+            Assert.Equal("sekretariat.jagiellonska@dosir.waw.pl", facility.Emails[0].Email);
+            Assert.Equal("sekretariat2.jagiellonska@dosir.waw.pl", facility.Emails[1].Email);
         }
     }
 }

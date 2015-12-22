@@ -17,7 +17,6 @@ namespace SportyWarsaw.Domain.Data
             { "NUMER", nameof(SportsFacility.Number)},
             { "OPIS", nameof(SportsFacility.Description)},
             { "DZIELNICA", nameof(SportsFacility.District)},
-            { "JEDN_ADM", nameof(SportsFacility.AdministrativeUnit)},
             { "WWW", nameof(SportsFacility.Website)},
         };
 
@@ -61,7 +60,7 @@ namespace SportyWarsaw.Domain.Data
             if (!string.IsNullOrEmpty(value))
             {
                 string email = Regex.Replace(value, @"^mailto:(\s)*", string.Empty);
-                facility.Emails.Add(email);
+                facility.Emails.Add(new EmailAddress { Email = email });
             }
         }
 

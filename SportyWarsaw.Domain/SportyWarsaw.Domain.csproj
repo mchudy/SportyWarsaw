@@ -101,6 +101,7 @@
     <Compile Include="Data\SportsFacilityConverter.cs" />
     <Compile Include="DomainModule.cs" />
     <Compile Include="Entities\Comment.cs" />
+    <Compile Include="Entities\EmailAddress.cs" />
     <Compile Include="Entities\Position.cs" />
     <Compile Include="Entities\Meeting.cs" />
     <Compile Include="Entities\SportsFacility.cs" />
@@ -114,6 +115,14 @@
     <Compile Include="Migrations\201512211550250_ExtendSportsFacility.cs" />
     <Compile Include="Migrations\201512211550250_ExtendSportsFacility.Designer.cs">
       <DependentUpon>201512211550250_ExtendSportsFacility.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201512221434416_RemoveAdministrativeUnit.cs" />
+    <Compile Include="Migrations\201512221434416_RemoveAdministrativeUnit.Designer.cs">
+      <DependentUpon>201512221434416_RemoveAdministrativeUnit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201512221457345_FixEmailAddresses.cs" />
+    <Compile Include="Migrations\201512221457345_FixEmailAddresses.Designer.cs">
+      <DependentUpon>201512221457345_FixEmailAddresses.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -129,6 +138,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201512211550250_ExtendSportsFacility.resx">
       <DependentUpon>201512211550250_ExtendSportsFacility.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201512221434416_RemoveAdministrativeUnit.resx">
+      <DependentUpon>201512221434416_RemoveAdministrativeUnit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201512221457345_FixEmailAddresses.resx">
+      <DependentUpon>201512221457345_FixEmailAddresses.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
