@@ -4,6 +4,7 @@ using SportyWarsaw.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Web;
 
 namespace SportyWarsaw.Domain.Data
 {
@@ -42,7 +43,7 @@ namespace SportyWarsaw.Domain.Data
                 if (result)
                 {
                     facility.GetType().GetProperty(mappings[key])
-                                      .SetValue(facility, Uri.UnescapeDataString(value));
+                                      .SetValue(facility, HttpUtility.HtmlDecode(value));
                 }
                 else if (key == "TEL_FAX")
                 {

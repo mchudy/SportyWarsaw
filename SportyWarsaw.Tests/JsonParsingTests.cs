@@ -112,5 +112,21 @@ namespace SportyWarsaw.Tests
             Assert.Equal("sekretariat.jagiellonska@dosir.waw.pl", facility.Emails[0].Email);
             Assert.Equal("sekretariat2.jagiellonska@dosir.waw.pl", facility.Emails[1].Email);
         }
+
+        [Fact]
+        public void SportsFacilityConverter_WhenStringContainsHtmlEscapeSequences_ShouldAddUnescapedValue()
+        {
+            string json = @"{
+                ""properties"":[
+                    {
+                        ""key"": ""OPIS"",
+                        ""value"": ""a&quot;b&amp;c""
+                    },
+                ]
+            }";
+            SportsFacility facility = JsonConvert.DeserializeObject<SportsFacility>(json);
+
+            Assert.Equal("a\"b&c", facility.Description);
+        }
     }
 }
