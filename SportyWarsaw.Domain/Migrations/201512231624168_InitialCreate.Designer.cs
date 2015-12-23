@@ -7,13 +7,13 @@ namespace SportyWarsaw.Domain.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class FriendshipImprovements : IMigrationMetadata
+    public sealed partial class InitialCreate : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(FriendshipImprovements));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(InitialCreate));
         
         string IMigrationMetadata.Id
         {
-            get { return "201512231544140_FriendshipImprovements"; }
+            get { return "201512231624168_InitialCreate"; }
         }
         
         string IMigrationMetadata.Source

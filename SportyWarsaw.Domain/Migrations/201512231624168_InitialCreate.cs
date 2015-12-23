@@ -42,12 +42,9 @@ namespace SportyWarsaw.Domain.Migrations
                         LockoutEnabled = c.Boolean(nullable: false),
                         AccessFailedCount = c.Int(nullable: false),
                         UserName = c.String(nullable: false, maxLength: 256),
-                        User_Id = c.String(maxLength: 128),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.AspNetUsers", t => t.User_Id)
-                .Index(t => t.UserName, unique: true, name: "UserNameIndex")
-                .Index(t => t.User_Id);
+                .Index(t => t.UserName, unique: true, name: "UserNameIndex");
             
             CreateTable(
                 "dbo.AspNetUserClaims",
@@ -61,6 +58,21 @@ namespace SportyWarsaw.Domain.Migrations
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
                 .Index(t => t.UserId);
+            
+            CreateTable(
+                "dbo.Friendships",
+                c => new
+                    {
+                        InviterId = c.String(nullable: false, maxLength: 128),
+                        FriendId = c.String(nullable: false, maxLength: 128),
+                        IsConfirmed = c.Boolean(nullable: false),
+                        CreatedTime = c.DateTime(nullable: false),
+                    })
+                .PrimaryKey(t => new { t.InviterId, t.FriendId })
+                .ForeignKey("dbo.AspNetUsers", t => t.InviterId, cascadeDelete: true)
+                .ForeignKey("dbo.AspNetUsers", t => t.FriendId)
+                .Index(t => t.InviterId)
+                .Index(t => t.FriendId);
             
             CreateTable(
                 "dbo.AspNetUserLogins",
@@ -150,13 +162,13 @@ namespace SportyWarsaw.Domain.Migrations
                 "dbo.UsersMeetings",
                 c => new
                     {
-                        Id = c.Int(nullable: false),
+                        MeetingId = c.Int(nullable: false),
                         UserId = c.String(nullable: false, maxLength: 128),
                     })
-                .PrimaryKey(t => new { t.Id, t.UserId })
-                .ForeignKey("dbo.Meetings", t => t.Id, cascadeDelete: true)
+                .PrimaryKey(t => new { t.MeetingId, t.UserId })
+                .ForeignKey("dbo.Meetings", t => t.MeetingId, cascadeDelete: true)
                 .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
-                .Index(t => t.Id)
+                .Index(t => t.MeetingId)
                 .Index(t => t.UserId);
             
         }
@@ -169,14 +181,15 @@ namespace SportyWarsaw.Domain.Migrations
             DropForeignKey("dbo.Meetings", "SportsFacility_Id", "dbo.SportsFacilities");
             DropForeignKey("dbo.EmailAddresses", "SportsFacility_Id", "dbo.SportsFacilities");
             DropForeignKey("dbo.UsersMeetings", "UserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.UsersMeetings", "Id", "dbo.Meetings");
+            DropForeignKey("dbo.UsersMeetings", "MeetingId", "dbo.Meetings");
             DropForeignKey("dbo.Meetings", "Organizer_Id", "dbo.AspNetUsers");
             DropForeignKey("dbo.Comments", "Meeting_Id", "dbo.Meetings");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.AspNetUsers", "User_Id", "dbo.AspNetUsers");
+            DropForeignKey("dbo.Friendships", "FriendId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.Friendships", "InviterId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
             DropIndex("dbo.UsersMeetings", new[] { "UserId" });
-            DropIndex("dbo.UsersMeetings", new[] { "Id" });
+            DropIndex("dbo.UsersMeetings", new[] { "MeetingId" });
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
@@ -184,8 +197,9 @@ namespace SportyWarsaw.Domain.Migrations
             DropIndex("dbo.Meetings", new[] { "SportsFacility_Id" });
             DropIndex("dbo.Meetings", new[] { "Organizer_Id" });
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
+            DropIndex("dbo.Friendships", new[] { "FriendId" });
+            DropIndex("dbo.Friendships", new[] { "InviterId" });
             DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
-            DropIndex("dbo.AspNetUsers", new[] { "User_Id" });
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
             DropIndex("dbo.Comments", new[] { "User_Id" });
             DropIndex("dbo.Comments", new[] { "Meeting_Id" });
@@ -196,6 +210,7 @@ namespace SportyWarsaw.Domain.Migrations
             DropTable("dbo.SportsFacilities");
             DropTable("dbo.Meetings");
             DropTable("dbo.AspNetUserLogins");
+            DropTable("dbo.Friendships");
             DropTable("dbo.AspNetUserClaims");
             DropTable("dbo.AspNetUsers");
             DropTable("dbo.Comments");

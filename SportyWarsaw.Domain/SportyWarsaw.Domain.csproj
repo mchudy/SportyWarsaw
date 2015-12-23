@@ -110,21 +110,9 @@
     <Compile Include="Entities\User.cs" />
     <Compile Include="Enums\SportsFacilityType.cs" />
     <Compile Include="Enums\SportType.cs" />
-    <Compile Include="Migrations\201512231428234_InitialCreate.cs" />
-    <Compile Include="Migrations\201512231428234_InitialCreate.Designer.cs">
-      <DependentUpon>201512231428234_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201512231451481_AddFriendship.cs" />
-    <Compile Include="Migrations\201512231451481_AddFriendship.Designer.cs">
-      <DependentUpon>201512231451481_AddFriendship.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201512231529496_FixFriendship.cs" />
-    <Compile Include="Migrations\201512231529496_FixFriendship.Designer.cs">
-      <DependentUpon>201512231529496_FixFriendship.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201512231544140_FriendshipImprovements.cs" />
-    <Compile Include="Migrations\201512231544140_FriendshipImprovements.Designer.cs">
-      <DependentUpon>201512231544140_FriendshipImprovements.cs</DependentUpon>
+    <Compile Include="Migrations\201512231624168_InitialCreate.cs" />
+    <Compile Include="Migrations\201512231624168_InitialCreate.Designer.cs">
+      <DependentUpon>201512231624168_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -135,17 +123,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201512231428234_InitialCreate.resx">
-      <DependentUpon>201512231428234_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201512231451481_AddFriendship.resx">
-      <DependentUpon>201512231451481_AddFriendship.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201512231529496_FixFriendship.resx">
-      <DependentUpon>201512231529496_FixFriendship.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201512231544140_FriendshipImprovements.resx">
-      <DependentUpon>201512231544140_FriendshipImprovements.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201512231624168_InitialCreate.resx">
+      <DependentUpon>201512231624168_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
