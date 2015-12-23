@@ -14,20 +14,23 @@ namespace SportyWarsaw.Domain.Migrations
                         Id = c.Int(nullable: false, identity: true),
                         Text = c.String(),
                         Date = c.DateTime(nullable: false),
-                        User_Id = c.String(maxLength: 128),
                         Meeting_Id = c.Int(),
+                        User_Id = c.String(maxLength: 128),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.AspNetUsers", t => t.User_Id)
                 .ForeignKey("dbo.Meetings", t => t.Meeting_Id)
-                .Index(t => t.User_Id)
-                .Index(t => t.Meeting_Id);
+                .ForeignKey("dbo.AspNetUsers", t => t.User_Id)
+                .Index(t => t.Meeting_Id)
+                .Index(t => t.User_Id);
             
             CreateTable(
                 "dbo.AspNetUsers",
                 c => new
                     {
                         Id = c.String(nullable: false, maxLength: 128),
+                        FirstName = c.String(),
+                        LastName = c.String(),
+                        Picture = c.Binary(),
                         Email = c.String(maxLength: 256),
                         EmailConfirmed = c.Boolean(nullable: false),
                         PasswordHash = c.String(),
@@ -39,12 +42,12 @@ namespace SportyWarsaw.Domain.Migrations
                         LockoutEnabled = c.Boolean(nullable: false),
                         AccessFailedCount = c.Int(nullable: false),
                         UserName = c.String(nullable: false, maxLength: 256),
-                        Meeting_Id = c.Int(),
+                        User_Id = c.String(maxLength: 128),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Meetings", t => t.Meeting_Id)
+                .ForeignKey("dbo.AspNetUsers", t => t.User_Id)
                 .Index(t => t.UserName, unique: true, name: "UserNameIndex")
-                .Index(t => t.Meeting_Id);
+                .Index(t => t.User_Id);
             
             CreateTable(
                 "dbo.AspNetUserClaims",
@@ -70,19 +73,6 @@ namespace SportyWarsaw.Domain.Migrations
                 .PrimaryKey(t => new { t.LoginProvider, t.ProviderKey, t.UserId })
                 .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
                 .Index(t => t.UserId);
-            
-            CreateTable(
-                "dbo.AspNetUserRoles",
-                c => new
-                    {
-                        UserId = c.String(nullable: false, maxLength: 128),
-                        RoleId = c.String(nullable: false, maxLength: 128),
-                    })
-                .PrimaryKey(t => new { t.UserId, t.RoleId })
-                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
-                .ForeignKey("dbo.AspNetRoles", t => t.RoleId, cascadeDelete: true)
-                .Index(t => t.UserId)
-                .Index(t => t.RoleId);
             
             CreateTable(
                 "dbo.Meetings",
@@ -113,11 +103,38 @@ namespace SportyWarsaw.Domain.Migrations
                         Number = c.String(),
                         Description = c.String(),
                         District = c.String(),
-                        AdministrativeUnit = c.String(),
                         PhoneNumber = c.String(),
                         Website = c.String(),
+                        Position_Latitude = c.Double(nullable: false),
+                        Position_Longitude = c.Double(nullable: false),
+                        Type = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id);
+            
+            CreateTable(
+                "dbo.EmailAddresses",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        Email = c.String(),
+                        SportsFacility_Id = c.Int(),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.SportsFacilities", t => t.SportsFacility_Id)
+                .Index(t => t.SportsFacility_Id);
+            
+            CreateTable(
+                "dbo.AspNetUserRoles",
+                c => new
+                    {
+                        UserId = c.String(nullable: false, maxLength: 128),
+                        RoleId = c.String(nullable: false, maxLength: 128),
+                    })
+                .PrimaryKey(t => new { t.UserId, t.RoleId })
+                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
+                .ForeignKey("dbo.AspNetRoles", t => t.RoleId, cascadeDelete: true)
+                .Index(t => t.UserId)
+                .Index(t => t.RoleId);
             
             CreateTable(
                 "dbo.AspNetRoles",
@@ -129,34 +146,55 @@ namespace SportyWarsaw.Domain.Migrations
                 .PrimaryKey(t => t.Id)
                 .Index(t => t.Name, unique: true, name: "RoleNameIndex");
             
+            CreateTable(
+                "dbo.UsersMeetings",
+                c => new
+                    {
+                        Id = c.Int(nullable: false),
+                        UserId = c.String(nullable: false, maxLength: 128),
+                    })
+                .PrimaryKey(t => new { t.Id, t.UserId })
+                .ForeignKey("dbo.Meetings", t => t.Id, cascadeDelete: true)
+                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
+                .Index(t => t.Id)
+                .Index(t => t.UserId);
+            
         }
         
         public override void Down()
         {
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
-            DropForeignKey("dbo.Meetings", "SportsFacility_Id", "dbo.SportsFacilities");
-            DropForeignKey("dbo.AspNetUsers", "Meeting_Id", "dbo.Meetings");
-            DropForeignKey("dbo.Meetings", "Organizer_Id", "dbo.AspNetUsers");
-            DropForeignKey("dbo.Comments", "Meeting_Id", "dbo.Meetings");
             DropForeignKey("dbo.Comments", "User_Id", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.Meetings", "SportsFacility_Id", "dbo.SportsFacilities");
+            DropForeignKey("dbo.EmailAddresses", "SportsFacility_Id", "dbo.SportsFacilities");
+            DropForeignKey("dbo.UsersMeetings", "UserId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.UsersMeetings", "Id", "dbo.Meetings");
+            DropForeignKey("dbo.Meetings", "Organizer_Id", "dbo.AspNetUsers");
+            DropForeignKey("dbo.Comments", "Meeting_Id", "dbo.Meetings");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.AspNetUsers", "User_Id", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
+            DropIndex("dbo.UsersMeetings", new[] { "UserId" });
+            DropIndex("dbo.UsersMeetings", new[] { "Id" });
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
-            DropIndex("dbo.Meetings", new[] { "SportsFacility_Id" });
-            DropIndex("dbo.Meetings", new[] { "Organizer_Id" });
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
+            DropIndex("dbo.EmailAddresses", new[] { "SportsFacility_Id" });
+            DropIndex("dbo.Meetings", new[] { "SportsFacility_Id" });
+            DropIndex("dbo.Meetings", new[] { "Organizer_Id" });
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
             DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
-            DropIndex("dbo.AspNetUsers", new[] { "Meeting_Id" });
+            DropIndex("dbo.AspNetUsers", new[] { "User_Id" });
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
-            DropIndex("dbo.Comments", new[] { "Meeting_Id" });
             DropIndex("dbo.Comments", new[] { "User_Id" });
+            DropIndex("dbo.Comments", new[] { "Meeting_Id" });
+            DropTable("dbo.UsersMeetings");
             DropTable("dbo.AspNetRoles");
+            DropTable("dbo.AspNetUserRoles");
+            DropTable("dbo.EmailAddresses");
             DropTable("dbo.SportsFacilities");
             DropTable("dbo.Meetings");
-            DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.AspNetUserLogins");
             DropTable("dbo.AspNetUserClaims");
             DropTable("dbo.AspNetUsers");

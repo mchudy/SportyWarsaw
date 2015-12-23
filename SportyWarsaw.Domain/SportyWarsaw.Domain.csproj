@@ -109,21 +109,9 @@
     <Compile Include="Entities\User.cs" />
     <Compile Include="Enums\SportsFacilityType.cs" />
     <Compile Include="Enums\SportType.cs" />
-    <Compile Include="Migrations\201512151229223_InitialCreate.cs" />
-    <Compile Include="Migrations\201512151229223_InitialCreate.Designer.cs">
-      <DependentUpon>201512151229223_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201512211550250_ExtendSportsFacility.cs" />
-    <Compile Include="Migrations\201512211550250_ExtendSportsFacility.Designer.cs">
-      <DependentUpon>201512211550250_ExtendSportsFacility.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201512221434416_RemoveAdministrativeUnit.cs" />
-    <Compile Include="Migrations\201512221434416_RemoveAdministrativeUnit.Designer.cs">
-      <DependentUpon>201512221434416_RemoveAdministrativeUnit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201512221457345_FixEmailAddresses.cs" />
-    <Compile Include="Migrations\201512221457345_FixEmailAddresses.Designer.cs">
-      <DependentUpon>201512221457345_FixEmailAddresses.cs</DependentUpon>
+    <Compile Include="Migrations\201512231428234_InitialCreate.cs" />
+    <Compile Include="Migrations\201512231428234_InitialCreate.Designer.cs">
+      <DependentUpon>201512231428234_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -134,17 +122,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201512151229223_InitialCreate.resx">
-      <DependentUpon>201512151229223_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201512211550250_ExtendSportsFacility.resx">
-      <DependentUpon>201512211550250_ExtendSportsFacility.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201512221434416_RemoveAdministrativeUnit.resx">
-      <DependentUpon>201512221434416_RemoveAdministrativeUnit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201512221457345_FixEmailAddresses.resx">
-      <DependentUpon>201512221457345_FixEmailAddresses.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201512231428234_InitialCreate.resx">
+      <DependentUpon>201512231428234_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

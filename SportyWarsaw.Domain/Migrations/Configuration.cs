@@ -1,12 +1,14 @@
 using SportyWarsaw.Domain.Data;
-using System.Linq;
 
 namespace SportyWarsaw.Domain.Migrations
 {
     using System.Data.Entity.Migrations;
+    using System.Linq;
 
     internal sealed class Configuration : DbMigrationsConfiguration<SportyWarsaw.Domain.SportyWarsawContext>
     {
+        private readonly ISportsFacilitiesDownloader downloader = new SportsFacilitiesDownloader();
+
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
@@ -14,7 +16,7 @@ namespace SportyWarsaw.Domain.Migrations
 
         protected override void Seed(SportyWarsawContext context)
         {
-            var facilities = new SportsFacilitiesDownloader().GetSportsFacilities().Result;
+            var facilities = downloader.GetSportsFacilities().Result;
             foreach (var facility in facilities)
             {
                 var entity = context.SportsFacilities.FirstOrDefault(f => f.Street == facility.Street && f.Number == facility.Number

@@ -15,5 +15,16 @@ namespace SportyWarsaw.Domain
         public IDbSet<Comment> Comments { get; set; }
         public IDbSet<Meeting> Meetings { get; set; }
         public IDbSet<EmailAddress> EmailAddresses { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Meeting>()
+                .HasMany(c => c.Participants).WithMany(i => i.Meetings)
+                .Map(t => t.MapLeftKey("MeetingId")
+                           .MapRightKey("UserId")
+                           .ToTable("UsersMeetings"));
+        }
     }
 }
