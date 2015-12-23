@@ -21,10 +21,21 @@ namespace SportyWarsaw.Domain
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Meeting>()
-                .HasMany(c => c.Participants).WithMany(i => i.Meetings)
-                .Map(t => t.MapLeftKey("MeetingId")
-                           .MapRightKey("UserId")
-                           .ToTable("UsersMeetings"));
+                        .HasMany(c => c.Participants).WithMany(i => i.Meetings)
+                        .Map(t => t.MapLeftKey("MeetingId")
+                                   .MapRightKey("UserId")
+                                   .ToTable("UsersMeetings"));
+
+            modelBuilder.Entity<User>()
+                        .HasMany(u => u.FriendshipsInitiated)
+                        .WithRequired(ul => ul.Inviter)
+                        .HasForeignKey(ul => ul.InviterId);
+
+            modelBuilder.Entity<User>()
+                        .HasMany(u => u.FriendshipsRequested)
+                        .WithRequired(ul => ul.Friend)
+                        .HasForeignKey(ul => ul.FriendId)
+                        .WillCascadeOnDelete(false);
         }
     }
 }
