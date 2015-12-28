@@ -27,7 +27,7 @@ namespace SportyWarsaw.WebApi.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var user = new User { UserName = model.Email, Email = model.Email };
+            var user = new User { UserName = model.UserName, Email = model.Email };
             IdentityResult result = await userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
             {
