@@ -159,6 +159,9 @@
   <ItemGroup>
     <Content Include="Global.asax" />
     <Content Include="packages.config" />
+    <Compile Include="Assemblers\ISportsFacilitiesAssembler.cs" />
+    <Compile Include="Infrastructure\AssemblersModule.cs" />
+    <Compile Include="Assemblers\SportsFacilityAssembler.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Filters\RequireHttpsAttribute.cs" />
     <Compile Include="Infrastructure\ApplicationUserManager.cs" />
