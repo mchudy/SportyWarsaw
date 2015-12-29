@@ -1,4 +1,7 @@
-﻿using SportyWarsaw.Domain;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using SportyWarsaw.Domain;
 using SportyWarsaw.Domain.Entities;
 using SportyWarsaw.WebApi.Assemblers;
 using SportyWarsaw.WebApi.Models;
@@ -27,6 +30,27 @@ namespace SportyWarsaw.WebApi.Controllers
             }
             SportsFacilityModel dto = assembler.ToSportsFacilityModel(facility);
             return Ok(dto);
+        }
+
+        public IHttpActionResult GetAll() // returns list of all facilities
+        {
+            var SportFacilitiesList = new List<SportsFacilityModel>();
+            foreach (var item in context.SportsFacilities)
+            {
+                SportFacilitiesList.Add(new SportsFacilityModel()
+                {
+                    Id = item.Id,
+                    Street = item.Street,
+                    Number = item.Number,
+                    District = item.District,
+                    Description = item.Description
+                });
+            }
+            if (SportFacilitiesList.Count == 0)
+            {
+                return NotFound();
+            }
+            return Ok(SportFacilitiesList);
         }
 
         public IHttpActionResult Add(SportsFacility sportfFacility) // adding new SportFacility
@@ -58,6 +82,13 @@ namespace SportyWarsaw.WebApi.Controllers
             context.SaveChanges();
             return Ok();
         }
+
+        public IHttpActionResult GetAllUsersFromFacility(int id) // list of all users in facility
+        {
+            // TO DO
+            return Ok();
+        }
+        //
 
 
     }
