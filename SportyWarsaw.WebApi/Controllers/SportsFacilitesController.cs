@@ -1,6 +1,7 @@
 ﻿using SportyWarsaw.Domain;
+using SportyWarsaw.Domain.Entities;
+using SportyWarsaw.WebApi.Assemblers;
 using SportyWarsaw.WebApi.Models;
-using System.Linq;
 using System.Web.Http;
 using SportyWarsaw.Domain.Entities;
 
@@ -9,23 +10,23 @@ namespace SportyWarsaw.WebApi.Controllers
     public class SportsFacilitiesController : ApiController
     {
         private readonly SportyWarsawContext context;
+        private readonly ISportsFacilitiesAssembler assembler;
 
-        public SportsFacilitiesController(SportyWarsawContext context)
+        public SportsFacilitiesController(SportyWarsawContext context, ISportsFacilitiesAssembler assembler)
         {
             this.context = context;
+            this.assembler = assembler;
         }
 
         public IHttpActionResult Get(int id)
         {
-            var models = context.SportsFacilities.Where(f => f.Id == id).Select(f => new SportsFacilityModel
+            SportsFacility facility = context.SportsFacilities.Find(id);
+            if (facility == null)
             {
-                Id = f.Id,
-                Description = f.Description,
-                District = f.District,
-                Number = f.Number,
-                Street = f.Street
-            });
-            return Ok(models);
+                return NotFound();
+            }
+            SportsFacilityModel dto = assembler.ToSportsFacilityModel(facility);
+            return Ok(dto);
         }
 
         public IHttpActionResult Add(SportsFacility sportfFacility) // adding new SportFacility
