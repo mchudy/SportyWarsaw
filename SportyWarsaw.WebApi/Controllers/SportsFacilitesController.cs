@@ -1,16 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Caching;
-using SportyWarsaw.Domain;
+﻿using SportyWarsaw.Domain;
 using SportyWarsaw.Domain.Entities;
 using SportyWarsaw.WebApi.Assemblers;
 using SportyWarsaw.WebApi.Models;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http;
-using SportyWarsaw.Domain.Entities;
 
 namespace SportyWarsaw.WebApi.Controllers
 {
+    [RoutePrefix("api/sportsFacilities")]
     public class SportsFacilitiesController : ApiController
     {
         private readonly SportyWarsawContext context;
@@ -33,11 +31,24 @@ namespace SportyWarsaw.WebApi.Controllers
             return Ok(dto);
         }
 
-        public IHttpActionResult GetAll() // returns list of all facilities
+        [Route("{id}/Details"), HttpGet]
+        public IHttpActionResult GetDetails(int id)
+        {
+            //TODO
+            return Ok();
+        }
+
+        [HttpGet]
+        public IHttpActionResult GetAll()
         {
             var SportFacilitiesList = new List<SportsFacilityModel>();
+            // takie rzeczy robi się LINQ
+            var sportsFacilitesList = context.SportsFacilities
+                                             .Select(s => assembler.ToSportsFacilityModel(s))
+                                             .ToList();
             foreach (var item in context.SportsFacilities)
             {
+                // od tego jest assembler
                 SportFacilitiesList.Add(new SportsFacilityModel()
                 {
                     Id = item.Id,
@@ -47,6 +58,7 @@ namespace SportyWarsaw.WebApi.Controllers
                     Description = item.Description
                 });
             }
+            // to najlepiej sprawdzić na początku
             if (SportFacilitiesList.Count == 0)
             {
                 return NotFound();
@@ -54,23 +66,29 @@ namespace SportyWarsaw.WebApi.Controllers
             return Ok(SportFacilitiesList);
         }
 
-        public IHttpActionResult Add(SportsFacility sportfFacility) // adding new SportFacility
+        // powinno brać model, nie encję, do przerobienia na encję trzeba dopisać metodę do assemblera
+        [HttpPost]
+        public IHttpActionResult Post(SportsFacility sportsFacility)
         {
+            // iterowanie po całej tabeli, żeby coś znaleźć, serio? Find(id)
             foreach (var item in context.SportsFacilities)
             {
-                if (item.Equals(sportfFacility))
+                if (item.Equals(sportsFacility))
                 {
-                    return BadRequest("it already exists");
+                    return BadRequest();
                 }
             }
-            context.SportsFacilities.Add(sportfFacility);
+            context.SportsFacilities.Add(sportsFacility);
             context.SaveChanges();
-            return Ok(sportfFacility);
+            return Ok(sportsFacility);
         }
 
-        public IHttpActionResult Modify(int id, SportsFacility modifiedSportsFacility) // modify sportfacility
+        // powinno brać model nie encję, id nie jest potrzebne
+        [HttpPut]
+        public IHttpActionResult Put(int id, SportsFacility modifiedSportsFacility)
         {
             // jak to zmienic w jedno zapytanie?
+            // var oldFacility = context.SportsFacilities.Find(modifiedSportsFacility.Id)
             context.SportsFacilities.FirstOrDefault(f => f.Id == id).Description = modifiedSportsFacility.Description;
             context.SportsFacilities.FirstOrDefault(f => f.Id == id).District = modifiedSportsFacility.District;
             context.SportsFacilities.FirstOrDefault(f => f.Id == id).Emails = modifiedSportsFacility.Emails;
@@ -84,23 +102,23 @@ namespace SportyWarsaw.WebApi.Controllers
             return Ok();
         }
 
-        public IHttpActionResult GetAllUsersFromFacility(int id) // list of all users in facility
+        // po co te metody? to raczej do MeetingsController, userzy raczej nie są bezpośrednio powiązani
+        // z ośrodkami (ew. można dodać jakieś ulubione, ale tego nie ma w bazie póki co)
+        public IHttpActionResult GetAllUsersFromFacility(int id)
         {
             // TO DO
             return Ok();
         }
 
-        public IHttpActionResult AddUserToFacility(int id, int userid)
+        public IHttpActionResult AddUserToFacility(int facilityId)
         {
             // TO DO
             return Ok();
         }
 
-        public IHttpActionResult RemoveUserFromFacility(int id, int userid)
+        public IHttpActionResult RemoveUserFromFacility(int facilityId)
         {
             return Ok();
         }
-
-
     }
 }
