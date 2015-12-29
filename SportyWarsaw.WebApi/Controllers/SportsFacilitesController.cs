@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Caching;
 using SportyWarsaw.Domain;
 using SportyWarsaw.Domain.Entities;
 using SportyWarsaw.WebApi.Assemblers;
@@ -88,7 +89,17 @@ namespace SportyWarsaw.WebApi.Controllers
             // TO DO
             return Ok();
         }
-        //
+
+        public IHttpActionResult AddUserToFacility(int id, int userid)
+        {
+            // TO DO
+            return Ok();
+        }
+
+        public IHttpActionResult RemoveUserFromFacility(int id, int userid)
+        {
+            return Ok();
+        }
 
 
     }
