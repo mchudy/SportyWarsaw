@@ -86,19 +86,60 @@ namespace SportyWarsaw.WebApi.Controllers
 
         public IHttpActionResult GetAllUsersFromFacility(int id) // list of all users in facility
         {
-            // TO DO
-            return Ok();
+            SportsFacility facility = context.SportsFacilities.Find(id);
+            if (facility == null)
+            {
+                return NotFound();
+            }
+            return Ok(facility.Emails); // returns users emails
         }
 
         public IHttpActionResult AddUserToFacility(int id, int userid)
         {
             // TO DO
-            return Ok();
+            string new_email = context.Users.Find(userid).Email;
+            if (new_email == null)
+            {
+                return NotFound();
+            }
+            EmailAddress emailadress = context.EmailAddresses.First(f => f.Email == new_email);
+            if (emailadress == null)
+            {
+                return NotFound();
+            }
+            SportsFacility facility = context.SportsFacilities.Find(id);
+            if (facility == null)
+            {
+                return NotFound();
+            }
+
+            context.SportsFacilities.Find(id).Emails.Add(emailadress);
+            context.SaveChanges();
+            return Ok(emailadress); // dto??
+
         }
 
         public IHttpActionResult RemoveUserFromFacility(int id, int userid)
         {
-            return Ok();
+            string new_email = context.Users.Find(userid).Email;
+            if (new_email == null)
+            {
+                return NotFound();
+            }
+            EmailAddress emailadress = context.EmailAddresses.First(f => f.Email == new_email);
+            if (emailadress == null)
+            {
+                return NotFound();
+            }
+            SportsFacility facility = context.SportsFacilities.Find(id);
+            if (facility == null)
+            {
+                return NotFound();
+            }
+            context.SportsFacilities.Find(id).Emails.Remove(emailadress);
+            context.SaveChanges();
+            return Ok(emailadress); // dto??
+
         }
 
 
