@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net.Http.Formatting;
 using System.Web.Http;
+using SportyWarsaw.WebApi.Filters;
 
 namespace SportyWarsaw.WebApi
 {
