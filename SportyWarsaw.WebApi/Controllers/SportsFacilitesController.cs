@@ -36,7 +36,6 @@ namespace SportyWarsaw.WebApi.Controllers
         [Route("{id}/Details"), HttpGet]
         public IHttpActionResult GetDetails(int id)
         {
-
             SportsFacility facility = context.SportsFacilities.Find(id);
             if (facility == null)
             {
@@ -130,72 +129,10 @@ namespace SportyWarsaw.WebApi.Controllers
             if (oldFacility == null)
             {
                 return BadRequest();
-            }
-            
+            }       
             context.SportsFacilities.Remove(oldFacility);
             context.SaveChanges();
             return Ok();
         }
-        // BEZ SENSU
-
-        // po co te metody? to raczej do MeetingsController, userzy raczej nie są bezpośrednio powiązani
-        // z ośrodkami (ew. można dodać jakieś ulubione, ale tego nie ma w bazie póki co)
-        //public IHttpActionResult GetAllUsersFromFacility(int id)
-        //{
-        //    SportsFacility facility = context.SportsFacilities.Find(id);
-        //    if (facility == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return Ok(facility.Emails); // returns users emails
-        //}
-
-        //public IHttpActionResult AddUserToFacility(int facilityId)
-        //{
-        //    // TO DO
-        //    string new_email = context.Users.Find(User.Identity).Email;
-        //    if (new_email == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    EmailAddress emailadress = context.EmailAddresses.First(f => f.Email == new_email);
-        //    if (emailadress == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    SportsFacility facility = context.SportsFacilities.Find(facilityId);
-        //    if (facility == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    context.SportsFacilities.Find(facilityId).Emails.Add(emailadress);
-        //    context.SaveChanges();
-        //    return Ok(emailadress); // dto??
-
-        //}
-
-        //public IHttpActionResult RemoveUserFromFacility(int facilityId)
-        //{
-        //    string new_email = context.Users.Find(User.Identity).Email;
-        //    if (new_email == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    EmailAddress emailadress = context.EmailAddresses.First(f => f.Email == new_email);
-        //    if (emailadress == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    SportsFacility facility = context.SportsFacilities.Find(facilityId);
-        //    if (facility == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    context.SportsFacilities.Find(facilityId).Emails.Remove(emailadress);
-        //    context.SaveChanges();
-        //    return Ok(emailadress); // dto??
-
-        //}
     }
 }

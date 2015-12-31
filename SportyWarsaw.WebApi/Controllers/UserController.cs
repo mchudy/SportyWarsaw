@@ -1,4 +1,5 @@
-﻿using SportyWarsaw.Domain;
+﻿using System;
+using SportyWarsaw.Domain;
 using SportyWarsaw.Domain.Entities;
 using SportyWarsaw.WebApi.Assemblers;
 using SportyWarsaw.WebApi.Models;
@@ -49,42 +50,84 @@ namespace SportyWarsaw.WebApi.Controllers
         [Route("MyFriends"), HttpGet]
         public IHttpActionResult GetMyFriends()
         {
-            var mymeetings =
-                context.Users.Find(User.Identity.GetUserId()).FriendshipsInitiated;
-            if (mymeetings == null) // lol
+            // poprawic !!
+            var myfriends1 =
+                context.Users.Find(User.Identity.GetUserId()).FriendshipsInitiated.Where(f => f.IsConfirmed).ToList();
+            var myfriends2 = context.Users.Find(User.Identity.GetUserId())
+                .FriendshipsRequested.Where(f => f.IsConfirmed).ToList();
+            
+            var myfriends = new List<Friendship>();
+            foreach (var item in myfriends1)
             {
-                return BadRequest();
+                myfriends.Add(item);
             }
-            return Ok(mymeetings);
+            foreach (var item in myfriends2)
+            {
+                myfriends.Add(item);
+            }
+            if (myfriends.Count == 0)
+            {
+                return NotFound();
+            }
+            return Ok(myfriends);
         }
 
         [Route("MyPendingFriendRequests"), HttpGet]
         public IHttpActionResult GetMyPendingFriendRequests()
         {
-           // to do
-            return Ok();
+            var friendrequests = context.Users.Find(User.Identity.GetUserId()).FriendshipsRequested;
+            if (friendrequests.Count == 0)
+            {
+                return NotFound();
+            }
+            return Ok(friendrequests);
         }
 
-        [Route("SendFriendRequest"), HttpPost]
+        [Route("SendFriendRequest/{id}"), HttpPost]
         public IHttpActionResult SendFriendRequest(int id) // id usera do ktorego wysylamy
         {
-            // to do
+            Friendship nowa = new Friendship()
+            {
+                CreatedTime = DateTime.Now,
+                Inviter = context.Users.Find(User.Identity.GetUserId()),
+                InviterId = User.Identity.GetUserId(),
+                Friend = context.Users.Find(id),
+                FriendId = context.Users.Find(id).Id,
+                IsConfirmed = false
+            };
+            context.Users.Find(id).FriendshipsRequested.Add(nowa);
+            context.Users.Find(User.Identity.GetUserId()).FriendshipsInitiated.Add(nowa);
             return Ok();
-
         }
 
-        [Route("AcceptFriendRequest"), HttpPost]
-        public IHttpActionResult AcceptFriendRequest(int id) // id usera do ktorego wysylamy
+        [Route("AcceptFriendRequest/{id}"), HttpPost]
+        public IHttpActionResult AcceptFriendRequest(int id) // id usera od ktorego dostajemy
         {
-            // to do
+            context.Users.Find(User.Identity.GetUserId()).FriendshipsRequested.First(f => f.FriendId == id.ToString()).IsConfirmed
+                = true;
+            context.Users.Find(id).FriendshipsInitiated.First(f => f.FriendId == User.Identity.GetUserId()).IsConfirmed
+                = true;
             return Ok();
-
         }
 
-        [Route("RejectFriendRequest"), HttpPost]
+        [Route("RejectFriendRequest/{id}"), HttpPost]
         public IHttpActionResult RejectFriendRequest(int id) // id usera do ktorego wysylamy
         {
-            // to do
+            Friendship to_delete1 = context.Users.Find(User.Identity.GetUserId()).FriendshipsRequested.First(f => f.FriendId == id.ToString());
+            if (to_delete1 == null)
+            {
+                return NotFound();
+            }
+            Friendship to_delete2 =
+                context.Users.Find(id).FriendshipsInitiated.First(f => f.FriendId == User.Identity.GetUserId());
+            if (to_delete2 == null)
+            {
+                return NotFound();
+            }
+
+            context.Users.Find(id).FriendshipsInitiated.Remove(to_delete2);
+            context.Users.Find(User.Identity.GetUserId()).FriendshipsRequested.Remove(to_delete1);
+            context.SaveChanges();
             return Ok();
 
         }
@@ -92,18 +135,14 @@ namespace SportyWarsaw.WebApi.Controllers
         [HttpPut]
         public IHttpActionResult Put(UserModel userFacility)
         {
-            // jak to zmienic w jedno zapytanie?
             var oldFacility = context.Users.Find(userFacility);
             if (oldFacility == null)
             {
                 return BadRequest();
             }
             // poprawki danych
-            //oldFacility.Description = modifiedSportsFacility.Description;
-            //oldFacility.District = modifiedSportsFacility.District;
-            //oldFacility.Number = modifiedSportsFacility.Number;
-            //oldFacility.Street = modifiedSportsFacility.Street;
-
+            oldFacility.FirstName = userFacility.FirstName;
+            oldFacility.LastName = userFacility.LastName;
             context.Users.AddOrUpdate(oldFacility);
             context.SaveChanges();
             return Ok();
@@ -112,7 +151,6 @@ namespace SportyWarsaw.WebApi.Controllers
         [HttpDelete]
         public IHttpActionResult Delete(UserModel userFacility)
         {
-            // jak to zmienic w jedno zapytanie?
             var oldFacility = context.Users.Find(userFacility);
             if (oldFacility == null)
             {

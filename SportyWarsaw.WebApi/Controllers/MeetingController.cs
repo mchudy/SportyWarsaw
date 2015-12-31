@@ -47,9 +47,6 @@ namespace SportyWarsaw.WebApi.Controllers
         [Route("{id}/Participants"), HttpGet]
         public IHttpActionResult GetParticipants(int id)
         {
-
-            //TODO
-            // zwracam liste uczestnikow
             var lista = context.Meetings.Find(id).Participants;
             if (lista == null || lista.Count == 0)
             {
@@ -64,17 +61,13 @@ namespace SportyWarsaw.WebApi.Controllers
             // TO DO
             var mymeetings =
                 context.Meetings.Where(f => f.Organizer.Id == User.Identity.ToString())
-                    .Select(s => assembler.ToMeetingModel(s));
-            if (mymeetings == null) // lol
+                    .Select(s => assembler.ToMeetingModel(s)).ToList();
+            if (mymeetings.Count==0)
             {
                 return BadRequest();
             }
             return Ok(mymeetings);
         }
-
-    
-
-
         [Route("JoinMeeting"),HttpPost]
         public IHttpActionResult JoinMeeting(MeetingPlusModel meetingFacility)
         {
@@ -106,7 +99,18 @@ namespace SportyWarsaw.WebApi.Controllers
             {
                 return BadRequest();
             }
-            context.Meetings.Add(new Meeting()); // uzupelnic
+            context.Meetings.Add(new Meeting()
+            {
+                SportsFacility = meetingFacility.SportsFacility,
+                Id = meetingFacility.Id,
+                Description = meetingFacility.Description,
+                Cost = meetingFacility.Cost,
+                EndTime = meetingFacility.EndTime,
+                MaxParticipants = meetingFacility.MaxParticipants,
+                Organizer = meetingFacility.Organizer,
+                SportType = meetingFacility.SportType,
+                StartTime = meetingFacility.StartTime,
+            }); // uzupelnic
             context.SaveChanges();
             return Ok(meetingFacility);
         }
@@ -121,11 +125,13 @@ namespace SportyWarsaw.WebApi.Controllers
                 return BadRequest();
             }
             // poprawki danych
-            //oldFacility.Description = modifiedSportsFacility.Description;
-            //oldFacility.District = modifiedSportsFacility.District;
-            //oldFacility.Number = modifiedSportsFacility.Number;
-            //oldFacility.Street = modifiedSportsFacility.Street;
-
+            oldFacility.Cost = meetingFacility.Cost;
+            oldFacility.Description = meetingFacility.Description;
+            oldFacility.EndTime = meetingFacility.EndTime;
+            oldFacility.StartTime = meetingFacility.StartTime;
+            oldFacility.Id = meetingFacility.Id;
+            oldFacility.MaxParticipants = meetingFacility.MaxParticipants;
+            oldFacility.SportType = meetingFacility.SportType;
             context.Meetings.AddOrUpdate(oldFacility);
             context.SaveChanges();
             return Ok();
@@ -144,18 +150,5 @@ namespace SportyWarsaw.WebApi.Controllers
             context.SaveChanges();
             return Ok(meetingFacility);
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }
