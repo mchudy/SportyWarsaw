@@ -1,5 +1,4 @@
-﻿using System.Data.Entity.Core.Metadata.Edm;
-using SportyWarsaw.Domain.Entities;
+﻿using SportyWarsaw.Domain.Entities;
 using SportyWarsaw.WebApi.Models;
 
 namespace SportyWarsaw.WebApi.Assemblers
@@ -11,7 +10,7 @@ namespace SportyWarsaw.WebApi.Assemblers
             return new MeetingModel()
             {
                 Id = entity.Id,
-                Description = entity.Description,
+                Title = entity.Title,
                 Cost = entity.Cost,
                 MaxParticipants = entity.MaxParticipants,
                 EndTime = entity.EndTime,
@@ -25,6 +24,7 @@ namespace SportyWarsaw.WebApi.Assemblers
             return new MeetingPlusModel()
             {
                 Id = entity.Id,
+                Title = entity.Title,
                 SportsFacility = entity.SportsFacility,
                 Description = entity.Description,
                 MaxParticipants = entity.MaxParticipants,

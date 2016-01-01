@@ -2,9 +2,7 @@
 using SportyWarsaw.Domain.Entities;
 using SportyWarsaw.WebApi.Assemblers;
 using SportyWarsaw.WebApi.Models;
-using System.Collections.Generic;
 using System.Data.Entity.Migrations;
-using System.Data.OleDb;
 using System.Linq;
 using System.Web.Http;
 namespace SportyWarsaw.WebApi.Controllers
@@ -55,20 +53,20 @@ namespace SportyWarsaw.WebApi.Controllers
             return Ok(lista);
         }
 
-        [Route("{id}/MyMeetings"),HttpGet]
+        [Route("{id}/MyMeetings"), HttpGet]
         public IHttpActionResult GetMyMeetings(int id)
         {
             // TO DO
             var mymeetings =
                 context.Meetings.Where(f => f.Organizer.Id == User.Identity.ToString())
                     .Select(s => assembler.ToMeetingModel(s)).ToList();
-            if (mymeetings.Count==0)
+            if (mymeetings.Count == 0)
             {
                 return BadRequest();
             }
             return Ok(mymeetings);
         }
-        [Route("JoinMeeting"),HttpPost]
+        [Route("JoinMeeting"), HttpPost]
         public IHttpActionResult JoinMeeting(MeetingPlusModel meetingFacility)
         {
             if (context.Meetings.Find(meetingFacility.Id) == null)
@@ -80,7 +78,7 @@ namespace SportyWarsaw.WebApi.Controllers
             context.SaveChanges();
             return Ok(meetingFacility);
         }
-        [Route("LeaveMeeting"),HttpPost]
+        [Route("LeaveMeeting"), HttpPost]
         public IHttpActionResult LeaveMeeting(MeetingPlusModel meetingFacility)
         {
             if (context.Meetings.Find(meetingFacility.Id) == null)
@@ -103,6 +101,7 @@ namespace SportyWarsaw.WebApi.Controllers
             {
                 SportsFacility = meetingFacility.SportsFacility,
                 Id = meetingFacility.Id,
+                Title = meetingFacility.Title,
                 Description = meetingFacility.Description,
                 Cost = meetingFacility.Cost,
                 EndTime = meetingFacility.EndTime,
@@ -114,7 +113,7 @@ namespace SportyWarsaw.WebApi.Controllers
             context.SaveChanges();
             return Ok(meetingFacility);
         }
-        
+
         [HttpPut]
         public IHttpActionResult Put(MeetingModel meetingFacility)
         {
@@ -126,7 +125,7 @@ namespace SportyWarsaw.WebApi.Controllers
             }
             // poprawki danych
             oldFacility.Cost = meetingFacility.Cost;
-            oldFacility.Description = meetingFacility.Description;
+            oldFacility.Title = meetingFacility.Title;
             oldFacility.EndTime = meetingFacility.EndTime;
             oldFacility.StartTime = meetingFacility.StartTime;
             oldFacility.Id = meetingFacility.Id;

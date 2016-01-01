@@ -56,7 +56,7 @@ namespace SportyWarsaw.Domain.Migrations
             {
                 Id = 1,
                 Cost = 10m,
-                Description = "Gra w pi³kê",
+                Title = "Gra w pi³kê",
                 StartTime = DateTime.Now.AddDays(1),
                 EndTime = DateTime.Now.AddDays(1).AddHours(2),
                 MaxParticipants = 22,
@@ -84,9 +84,9 @@ namespace SportyWarsaw.Domain.Migrations
             {
                 Id = 2,
                 Cost = 10m,
-                Description = "Gra w pi³kê",
-                StartTime = DateTime.Now.AddDays(1),
-                EndTime = DateTime.Now.AddDays(1).AddHours(2),
+                Title = "Gra w pi³kê 2",
+                StartTime = DateTime.Now.AddDays(2),
+                EndTime = DateTime.Now.AddDays(2).AddHours(2),
                 MaxParticipants = 22,
                 Organizer = user2,
                 SportType = SportType.Football,
