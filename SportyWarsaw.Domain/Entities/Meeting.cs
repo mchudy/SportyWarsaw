@@ -16,7 +16,7 @@ namespace SportyWarsaw.Domain.Entities
         public string Description { get; set; }
 
         public virtual SportsFacility SportsFacility { get; set; }
-        public virtual ICollection<User> Participants { get; set; }
-        public virtual ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<User> Participants { get; set; } = new HashSet<User>();
+        public virtual ICollection<Comment> Comments { get; set; } = new HashSet<Comment>();
     }
 }
