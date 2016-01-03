@@ -45,8 +45,9 @@ namespace SportyWarsaw.WebApi.Controllers
             return Ok(dto);
         }
 
-        [Route("Page?size=x&index=x"), HttpGet]
-        public IHttpActionResult GetPageSize()
+        //[Route("Page?size=x&index=x"), HttpGet]
+        [Route("Page"), HttpGet]
+        public IHttpActionResult GetPageSize(int size, int index)
         {
             // to do
             return Ok();
