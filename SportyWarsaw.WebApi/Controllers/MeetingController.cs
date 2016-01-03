@@ -55,10 +55,9 @@ namespace SportyWarsaw.WebApi.Controllers
             return Ok(lista);
         }
 
-        [Route("{id}/MyMeetings"), HttpGet]
+        [Route("MyMeetings"), HttpGet]
         public IHttpActionResult GetMyMeetings(int id)
         {
-            // TO DO
             var mymeetings =
                 context.Meetings.Where(f => f.Organizer.Id == User.Identity.ToString())
                     .Select(s => assembler.ToMeetingModel(s)).ToList();
@@ -68,40 +67,50 @@ namespace SportyWarsaw.WebApi.Controllers
             }
             return Ok(mymeetings);
         }
-        [Route("JoinMeeting"), HttpPost]
-        public IHttpActionResult JoinMeeting(MeetingPlusModel meetingFacility)
+        [Route("{id}/JoinMeeting"), HttpPost]
+        public IHttpActionResult JoinMeeting(int id)
         {
-            if (context.Meetings.Find(meetingFacility.Id) == null)
+            if (context.Meetings.Find(id) == null)
             {
                 return BadRequest();
             }
             User newUser = context.Users.Find(User.Identity);
-            context.Meetings.Find(meetingFacility.Id).Participants.Add(newUser);
+            if (newUser == null)
+            {
+                return BadRequest();
+            }
+            context.Meetings.Find(id).Participants.Add(newUser);
             context.SaveChanges();
-            return Ok(meetingFacility);
+            return Ok(id);
         }
-        [Route("LeaveMeeting"), HttpPost]
-        public IHttpActionResult LeaveMeeting(MeetingPlusModel meetingFacility)
+        [Route("{id}/LeaveMeeting"), HttpPost]
+        public IHttpActionResult LeaveMeeting(int id)
         {
-            if (context.Meetings.Find(meetingFacility.Id) == null)
+            if (context.Meetings.Find(id) == null)
             {
                 return BadRequest();
             }
             User newUser = context.Users.Find(User.Identity);
-            context.Meetings.Find(meetingFacility.Id).Participants.Remove(newUser);
+            context.Meetings.Find(id).Participants.Remove(newUser);
             context.SaveChanges();
-            return Ok(meetingFacility);
+            return Ok(id);
         }
         [HttpPost]
         public IHttpActionResult Post(MeetingPlusModel meetingFacility) // new meeting
         {
+            SportsFacilitiesAssembler assembler = new SportsFacilitiesAssembler();
             if (context.Meetings.Find(meetingFacility.Id) == null)
+            {
+                return BadRequest();
+            }
+            SportsFacility facility = context.SportsFacilities.Find(meetingFacility.SportsFacility.Id);
+            if (facility == null)
             {
                 return BadRequest();
             }
             context.Meetings.Add(new Meeting()
             {
-                SportsFacility = meetingFacility.SportsFacility,
+                SportsFacility = facility,
                 Id = meetingFacility.Id,
                 Title = meetingFacility.Title,
                 Description = meetingFacility.Description,
@@ -111,7 +120,7 @@ namespace SportyWarsaw.WebApi.Controllers
                 Organizer = context.Meetings.Find(meetingFacility.Id).Organizer,
                 SportType = meetingFacility.SportType,
                 StartTime = meetingFacility.StartTime,
-            }); // uzupelnic
+            });
             context.SaveChanges();
             return Ok(meetingFacility);
         }
@@ -141,7 +150,6 @@ namespace SportyWarsaw.WebApi.Controllers
         [HttpDelete]
         public IHttpActionResult Delete(int id)
         {
-            // jak to zmienic w jedno zapytanie?
             var oldFacility = context.Meetings.Find(id);
             if (oldFacility == null)
             {

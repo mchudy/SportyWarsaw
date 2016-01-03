@@ -16,6 +16,6 @@ namespace SportyWarsaw.WebApi.Models
         public string Description { get; set; }
 
         public string OrganizerName { get; set; }
-        public SportsFacility SportsFacility { get; set; }
+        public SportFacilityPlusModel SportsFacility { get; set; }
     }
 }

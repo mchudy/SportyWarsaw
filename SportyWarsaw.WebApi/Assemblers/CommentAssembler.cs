@@ -8,7 +8,7 @@ using SportyWarsaw.WebApi.Models;
 
 namespace SportyWarsaw.WebApi.Assemblers
 {
-    public class CommentAssembler
+    public class CommentAssembler : ICommentAssembler
     {
         public CommentModel ToCommentModel(Comment entity)
         {

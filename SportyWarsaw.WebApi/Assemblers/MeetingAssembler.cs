@@ -21,11 +21,11 @@ namespace SportyWarsaw.WebApi.Assemblers
 
         public MeetingPlusModel ToMeetingPlusModel(Meeting entity)
         {
-            return new MeetingPlusModel()
+            SportsFacilitiesAssembler assembler = new SportsFacilitiesAssembler();
+            MeetingPlusModel model = new MeetingPlusModel()
             {
                 Id = entity.Id,
                 Title = entity.Title,
-                SportsFacility = entity.SportsFacility,
                 Description = entity.Description,
                 MaxParticipants = entity.MaxParticipants,
                 Cost = entity.Cost,
@@ -34,6 +34,8 @@ namespace SportyWarsaw.WebApi.Assemblers
                 SportType = entity.SportType,
                 StartTime = entity.StartTime
             };
+            model.SportsFacility = assembler.ToSportFacilityPlusModel(entity.SportsFacility);
+            return model;
         }
     }
 }
