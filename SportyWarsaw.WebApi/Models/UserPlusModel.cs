@@ -10,17 +10,17 @@ namespace SportyWarsaw.WebApi.Models
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public ICollection<Meeting> Meetings { get; set; } 
+        public ICollection<MeetingPlusModel> Meetings { get; set; } 
 
         /// <summary>
         /// Friendships that the user initiated himself (i.e. he sent the friend request)
         /// </summary>
-        public ICollection<Friendship> FriendshipsInitiated { get; set; } 
+        public ICollection<FriendshipModel> FriendshipsInitiated { get; set; } 
 
         /// <summary>
         /// Friendships that were requested from the user (i.e. he received the friend request)
         /// </summary>
-        public  ICollection<Friendship> FriendshipsRequested { get; set; }
+        public  ICollection<FriendshipModel> FriendshipsRequested { get; set; }
 
     }
 }

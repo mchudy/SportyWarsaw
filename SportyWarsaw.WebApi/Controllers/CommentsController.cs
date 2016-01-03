@@ -62,15 +62,20 @@ namespace SportyWarsaw.WebApi.Controllers
         }
 
         [HttpPost]
-        public IHttpActionResult Post(CommentPlusModel commentFacility)
+        public IHttpActionResult Post(CommentModel commentFacility)
         {
             if (context.SportsFacilities.Find(commentFacility.Id) == null)
             {
                 return BadRequest();
             }
+            User currentUser = context.Users.Find(commentFacility.UserId);
+            if (currentUser == null)
+            {
+                return BadRequest();
+            }
             context.Comments.Add(new Comment()
             {
-                User = commentFacility.User,
+                User = currentUser,
                 Id = commentFacility.Id,
                 Date = DateTime.Now,
                 Text = commentFacility.Text

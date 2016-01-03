@@ -17,14 +17,39 @@ namespace SportyWarsaw.WebApi.Assemblers
 
         public UserPlusModel ToUserPlusModel(User entity)
         {
-            return new UserPlusModel()
+            FriendshipAssembler friendship = new FriendshipAssembler();
+            MeetingAssembler meeting = new MeetingAssembler();
+
+            UserPlusModel userPlusModel = new UserPlusModel()
             {
                 FirstName = entity.FirstName,
-                LastName = entity.LastName,
-                Meetings = entity.Meetings,
-                FriendshipsInitiated = entity.FriendshipsInitiated,
-                FriendshipsRequested = entity.FriendshipsRequested
+                LastName = entity.LastName
             };
+
+            foreach (var item in entity.Meetings)
+            {
+                userPlusModel.Meetings.Add(meeting.ToMeetingPlusModel(item));
+            }
+
+            foreach (var item in entity.FriendshipsInitiated)
+            {
+                userPlusModel.FriendshipsInitiated.Add(friendship.ToFriendshipModel(item));
+            }
+
+            foreach (var item in entity.FriendshipsRequested)
+            {
+                userPlusModel.FriendshipsRequested.Add(friendship.ToFriendshipModel(item));
+            }
+            //return new UserPlusModel()
+            //{
+            //    FirstName = entity.FirstName,
+            //    LastName = entity.LastName,
+            //    Meetings = entity.Meetings,
+            //    FriendshipsInitiated = entity.FriendshipsInitiated,
+            //    FriendshipsRequested = entity.FriendshipsRequested
+            //};
+
+            return userPlusModel;
         }
 
     }

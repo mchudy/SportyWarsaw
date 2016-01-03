@@ -16,19 +16,10 @@ namespace SportyWarsaw.WebApi.Assemblers
             {
                 Id = entity.Id,
                 Date = entity.Date,
-                Text = entity.Text
+                Text = entity.Text,
+                UserId = entity.User.Id
             };
         }
 
-        public CommentPlusModel ToCommentPlusModel(Comment entity)
-        {
-            return new CommentPlusModel()
-            {
-                Date = entity.Date,
-                Id = entity.Id,
-                Text = entity.Text,
-                User = entity.User
-            };
-        }
     }
 }

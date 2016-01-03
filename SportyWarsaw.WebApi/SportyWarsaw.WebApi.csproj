@@ -160,7 +160,9 @@
     <Content Include="Global.asax" />
     <Content Include="packages.config" />
     <Compile Include="Assemblers\CommentAssembler.cs" />
+    <Compile Include="Assemblers\FriendshipAssembler.cs" />
     <Compile Include="Assemblers\ICommentAssembler.cs" />
+    <Compile Include="Assemblers\IFriendshipAssembler.cs" />
     <Compile Include="Assemblers\IMeetingAssembler.cs" />
     <Compile Include="Assemblers\ISportsFacilitiesAssembler.cs" />
     <Compile Include="Assemblers\IUserAssembler.cs" />
@@ -195,7 +197,7 @@
     </Compile>
     <Compile Include="Infrastructure\IdentityModule.cs" />
     <Compile Include="Models\CommentModel.cs" />
-    <Compile Include="Models\CommentPlusModel.cs" />
+    <Compile Include="Models\FriendshipModel.cs" />
     <Compile Include="Models\MeetingModel.cs" />
     <Compile Include="Models\MeetingPlusModel.cs" />
     <Compile Include="Models\RegisterAccountModel.cs" />

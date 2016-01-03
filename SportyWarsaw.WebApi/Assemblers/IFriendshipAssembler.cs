@@ -3,8 +3,8 @@ using SportyWarsaw.WebApi.Models;
 
 namespace SportyWarsaw.WebApi.Assemblers
 {
-    public interface ICommentAssembler
+    public interface IFriendshipAssembler
     {
-        CommentModel ToCommentModel(Comment entity);
+        FriendshipModel ToFriendshipModel(Friendship entity);
     }
 }
