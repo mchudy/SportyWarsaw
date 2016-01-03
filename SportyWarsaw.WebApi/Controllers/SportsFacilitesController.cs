@@ -1,4 +1,5 @@
-﻿using SportyWarsaw.Domain;
+﻿using System;
+using SportyWarsaw.Domain;
 using SportyWarsaw.Domain.Entities;
 using SportyWarsaw.WebApi.Assemblers;
 using SportyWarsaw.WebApi.Models;
@@ -21,7 +22,7 @@ namespace SportyWarsaw.WebApi.Controllers
             this.context = context;
             this.assembler = assembler;
         }
-
+        [HttpGet]
         public IHttpActionResult Get(int id)
         {
             SportsFacility facility = context.SportsFacilities.Find(id);
@@ -50,7 +51,23 @@ namespace SportyWarsaw.WebApi.Controllers
         public IHttpActionResult GetPageSize(int size, int index)
         {
             // to do
-            return Ok();
+            var total_count = context.SportsFacilities.Count();
+            var total_pages = Math.Ceiling((double)total_count/size);
+
+            var query = context.SportsFacilities.ToList();
+            if (query.Count == 0)
+            {
+                return NotFound();
+            }
+
+            query = query.OrderBy(f => f.Id).ToList();
+
+            var outlist = query.Skip((index - 1) * size)
+                            .Take(size)
+                            .ToList();
+
+            // jeszcze jakies info o max ilosci stron ??
+            return Ok(outlist);
         }
         [HttpGet]
         public IHttpActionResult GetAll()

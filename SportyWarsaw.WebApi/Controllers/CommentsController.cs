@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using Microsoft.AspNet.Identity;
@@ -8,6 +9,7 @@ using SportyWarsaw.WebApi.Infrastructure;
 using SportyWarsaw.WebApi.Models;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.UI.WebControls;
 using SportyWarsaw.Domain;
 using SportyWarsaw.WebApi.Assemblers;
 
@@ -38,9 +40,15 @@ namespace SportyWarsaw.WebApi.Controllers
         [Route("{meetingid}"), HttpGet]
         public IHttpActionResult GetAll(int meetingid)
         {
-            var list_comments = context.Meetings.Find(meetingid).Comments;
+            var list_comments = context.Meetings.Find(meetingid).Comments.ToList();
+            //przerobie na dto
+            var outlist = new List<CommentModel>();
+            foreach (var item in list_comments)
+            {
+                outlist.Add(assembler.ToCommentModel(item));
+            }
             // to do
-            return Ok(list_comments);
+            return Ok(outlist);
         }
 
         [HttpPut]

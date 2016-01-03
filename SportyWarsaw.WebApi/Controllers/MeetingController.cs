@@ -1,4 +1,5 @@
-﻿using SportyWarsaw.Domain;
+﻿using System.Collections.Generic;
+using SportyWarsaw.Domain;
 using SportyWarsaw.Domain.Entities;
 using SportyWarsaw.WebApi.Assemblers;
 using SportyWarsaw.WebApi.Models;
@@ -47,12 +48,18 @@ namespace SportyWarsaw.WebApi.Controllers
         [Route("{id}/Participants"), HttpGet]
         public IHttpActionResult GetParticipants(int id)
         {
-            var lista = context.Meetings.Find(id).Participants;
-            if (lista == null || lista.Count == 0)
+            UserAssembler user_assembler = new UserAssembler();
+            var lista = context.Meetings.Find(id).Participants.ToList();
+            if (lista.Count == 0)
             {
                 return BadRequest();
             }
-            return Ok(lista);
+            var outlist = new List<UserModel>();
+            foreach (var item in lista)
+            {
+                outlist.Add(user_assembler.ToUserModel(item));
+            }
+            return Ok(outlist);
         }
 
         [Route("MyMeetings"), HttpGet]
@@ -74,7 +81,7 @@ namespace SportyWarsaw.WebApi.Controllers
             {
                 return BadRequest();
             }
-            User newUser = context.Users.Find(User.Identity);
+            User newUser = context.Users.Find(User.Identity.ToString());
             if (newUser == null)
             {
                 return BadRequest();
@@ -91,6 +98,10 @@ namespace SportyWarsaw.WebApi.Controllers
                 return BadRequest();
             }
             User newUser = context.Users.Find(User.Identity);
+            if (newUser == null)
+            {
+                return BadRequest();
+            }
             context.Meetings.Find(id).Participants.Remove(newUser);
             context.SaveChanges();
             return Ok(id);
