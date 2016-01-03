@@ -149,16 +149,16 @@ namespace SportyWarsaw.WebApi.Controllers
         }
 
         [HttpDelete]
-        public IHttpActionResult Delete(UserModel userFacility)
+        public IHttpActionResult Delete(int id)
         {
-            var oldFacility = context.Users.Find(userFacility);
+            var oldFacility = context.Users.Find(id);
             if (oldFacility == null)
             {
                 return BadRequest();
             }
             context.Users.Remove(oldFacility);
             context.SaveChanges();
-            return Ok(userFacility);
+            return Ok(oldFacility);
         }
     }
 }

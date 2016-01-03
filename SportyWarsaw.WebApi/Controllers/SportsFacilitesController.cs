@@ -122,17 +122,17 @@ namespace SportyWarsaw.WebApi.Controllers
         }
 
         [HttpDelete]
-        public IHttpActionResult Delete(SportsFacilityModel modifiedSportsFacility)
+        public IHttpActionResult Delete(int id)
         {
             // jak to zmienic w jedno zapytanie?
-            var oldFacility = context.SportsFacilities.Find(modifiedSportsFacility.Id);
+            var oldFacility = context.SportsFacilities.Find(id);
             if (oldFacility == null)
             {
                 return BadRequest();
             }       
             context.SportsFacilities.Remove(oldFacility);
             context.SaveChanges();
-            return Ok();
+            return Ok(oldFacility);
         }
     }
 }

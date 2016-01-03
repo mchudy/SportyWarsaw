@@ -15,7 +15,7 @@ namespace SportyWarsaw.WebApi.Models
         public decimal? Cost { get; set; }
         public string Description { get; set; }
 
-        public virtual User Organizer { get; set; }
+        public string OrganizerName { get; set; }
         public SportsFacility SportsFacility { get; set; }
     }
 }

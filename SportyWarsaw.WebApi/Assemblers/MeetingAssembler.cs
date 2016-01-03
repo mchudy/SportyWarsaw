@@ -30,7 +30,7 @@ namespace SportyWarsaw.WebApi.Assemblers
                 MaxParticipants = entity.MaxParticipants,
                 Cost = entity.Cost,
                 EndTime = entity.EndTime,
-                Organizer = entity.Organizer,
+                OrganizerName = entity.Organizer.UserName,
                 SportType = entity.SportType,
                 StartTime = entity.StartTime
             };

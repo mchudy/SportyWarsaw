@@ -5,6 +5,8 @@ using SportyWarsaw.WebApi.Models;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Web.Http;
+using SportyWarsaw.Domain.Enums;
+
 namespace SportyWarsaw.WebApi.Controllers
 {
     [RoutePrefix("api/Meetings")]
@@ -106,7 +108,7 @@ namespace SportyWarsaw.WebApi.Controllers
                 Cost = meetingFacility.Cost,
                 EndTime = meetingFacility.EndTime,
                 MaxParticipants = meetingFacility.MaxParticipants,
-                Organizer = meetingFacility.Organizer,
+                Organizer = context.Meetings.Find(meetingFacility.Id).Organizer,
                 SportType = meetingFacility.SportType,
                 StartTime = meetingFacility.StartTime,
             }); // uzupelnic
@@ -137,17 +139,17 @@ namespace SportyWarsaw.WebApi.Controllers
         }
 
         [HttpDelete]
-        public IHttpActionResult Delete(MeetingModel meetingFacility)
+        public IHttpActionResult Delete(int id)
         {
             // jak to zmienic w jedno zapytanie?
-            var oldFacility = context.Meetings.Find(meetingFacility.Id);
+            var oldFacility = context.Meetings.Find(id);
             if (oldFacility == null)
             {
                 return BadRequest();
             }
             context.Meetings.Remove(oldFacility);
             context.SaveChanges();
-            return Ok(meetingFacility);
+            return Ok(oldFacility);
         }
     }
 }

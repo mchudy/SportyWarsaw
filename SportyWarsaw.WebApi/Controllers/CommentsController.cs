@@ -1,4 +1,5 @@
-﻿using System.Data.Entity.Migrations;
+﻿using System;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
@@ -71,7 +72,7 @@ namespace SportyWarsaw.WebApi.Controllers
             {
                 User = commentFacility.User,
                 Id = commentFacility.Id,
-                Date = commentFacility.Date,
+                Date = DateTime.Now,
                 Text = commentFacility.Text
             });
             context.SaveChanges();
@@ -79,17 +80,17 @@ namespace SportyWarsaw.WebApi.Controllers
         }
 
         [HttpDelete]
-        public IHttpActionResult Delete(CommentModel commentFacility)
+        public IHttpActionResult Delete(int id)
         {
             // jak to zmienic w jedno zapytanie?
-            var oldFacility = context.Comments.Find(commentFacility.Id);
+            var oldFacility = context.Comments.Find(id);
             if (oldFacility == null)
             {
                 return BadRequest();
             }    
             context.Comments.Remove(oldFacility);
             context.SaveChanges();
-            return Ok(commentFacility);
+            return Ok(oldFacility);
         }
     }
 }
