@@ -119,6 +119,11 @@ namespace SportyWarsaw.WebApi.Controllers
             {
                 return BadRequest();
             }
+            User organizer = context.Meetings.Find(meetingFacility.Id).Organizer;
+            if (organizer == null)
+            {
+                return BadRequest();
+            }
             context.Meetings.Add(new Meeting()
             {
                 SportsFacility = facility,
@@ -128,7 +133,7 @@ namespace SportyWarsaw.WebApi.Controllers
                 Cost = meetingFacility.Cost,
                 EndTime = meetingFacility.EndTime,
                 MaxParticipants = meetingFacility.MaxParticipants,
-                Organizer = context.Meetings.Find(meetingFacility.Id).Organizer,
+                Organizer = organizer,
                 SportType = meetingFacility.SportType,
                 StartTime = meetingFacility.StartTime,
             });

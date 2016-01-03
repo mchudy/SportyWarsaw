@@ -7,5 +7,8 @@ namespace SportyWarsaw.WebApi.Assemblers
     {
         SportsFacilityModel ToSportsFacilityModel(SportsFacility entity);
         SportFacilityPlusModel ToSportFacilityPlusModel(SportsFacility entity);
+
+        SportsFacility ToSportsFacilityFromPlusModel(SportFacilityPlusModel model);
+        SportsFacility ToSportsFacilityFromModel(SportsFacilityModel model);
     }
 }

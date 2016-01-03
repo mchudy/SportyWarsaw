@@ -75,7 +75,8 @@ namespace SportyWarsaw.WebApi.Controllers
         [Route("MyPendingFriendRequests"), HttpGet]
         public IHttpActionResult GetMyPendingFriendRequests()
         {
-            var friendrequests = context.Users.Find(User.Identity.GetUserId()).FriendshipsRequested;
+            var friendrequests =
+                context.Users.Find(User.Identity.GetUserId()).FriendshipsRequested.Where(f => f.IsConfirmed==false).ToList();
             if (friendrequests.Count == 0)
             {
                 return NotFound();
@@ -83,16 +84,38 @@ namespace SportyWarsaw.WebApi.Controllers
             return Ok(friendrequests);
         }
 
+        [Route("MySentFriendRequests"), HttpGet]
+        public IHttpActionResult GetMySentFriendRequests()
+        {
+            var sentfriendrequests =
+                context.Users.Find(User.Identity.GetUserId()).FriendshipsInitiated.Where(f => f.IsConfirmed == false).ToList();
+            if (sentfriendrequests.Count == 0)
+            {
+                return NotFound();
+            }
+            return Ok(sentfriendrequests);
+        }
+
         [Route("SendFriendRequest/{id}"), HttpPost]
         public IHttpActionResult SendFriendRequest(int id) // id usera do ktorego wysylamy
         {
+            User inviter = context.Users.Find(User.Identity.GetUserId());
+            if (inviter == null)
+            {
+                return BadRequest();
+            }
+            User friend = context.Users.Find(id);
+            if (friend == null)
+            {
+                return BadRequest();
+            }
             Friendship nowa = new Friendship()
             {
                 CreatedTime = DateTime.Now,
-                Inviter = context.Users.Find(User.Identity.GetUserId()),
-                InviterId = User.Identity.GetUserId(),
-                Friend = context.Users.Find(id),
-                FriendId = context.Users.Find(id).Id,
+                Inviter = inviter,
+                InviterId = inviter.Id,
+                Friend = friend,
+                FriendId = friend.Id,
                 IsConfirmed = false
             };
             context.Users.Find(id).FriendshipsRequested.Add(nowa);

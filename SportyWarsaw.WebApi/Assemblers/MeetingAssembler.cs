@@ -37,5 +37,34 @@ namespace SportyWarsaw.WebApi.Assemblers
             model.SportsFacility = assembler.ToSportFacilityPlusModel(entity.SportsFacility);
             return model;
         }
+
+        public Meeting ToMeetingFromPlusModel(MeetingPlusModel model)
+        {
+            return new Meeting()
+            {
+                Id = model.Id,
+                Description = model.Description,
+                Cost = model.Cost,
+                EndTime = model.EndTime,
+                MaxParticipants = model.MaxParticipants,
+                SportType = model.SportType,
+                StartTime = model.StartTime,
+                Title = model.Title,
+            };
+        }
+
+        public Meeting ToMeetingFromModel(MeetingModel model)
+        {
+            return new Meeting()
+            {
+                Cost = model.Cost,
+                EndTime = model.EndTime,
+                StartTime = model.StartTime,
+                MaxParticipants = model.MaxParticipants,
+                SportType = model.SportType,
+                Title = model.Title,
+                Id = model.Id
+            };
+        }
     }
 }

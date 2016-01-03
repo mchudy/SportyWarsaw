@@ -32,5 +32,33 @@ namespace SportyWarsaw.WebApi.Assemblers
                 Type = entity.Type
             };
         }
+
+        public SportsFacility ToSportsFacilityFromModel(SportsFacilityModel model)
+        {
+            return new SportsFacility()
+            {
+                Id = model.Id,
+                Description = model.Description,
+                District = model.District,
+                Number = model.Number,
+                Street = model.Street,
+            };
+        }
+
+        public SportsFacility ToSportsFacilityFromPlusModel(SportFacilityPlusModel model)
+        {
+            return new SportsFacility()
+            {
+                Id = model.Id,
+                Description = model.Description,
+                District = model.District,
+                Number = model.Number,
+                PhoneNumber = model.PhoneNumber,
+                Street = model.Street,
+                Website = model.Website,
+                Position = model.Position,
+                Type = model.Type
+            };
+        }
     }
 }

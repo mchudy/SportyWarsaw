@@ -72,51 +72,21 @@ namespace SportyWarsaw.WebApi.Controllers
         [HttpGet]
         public IHttpActionResult GetAll()
         {
-            //var SportFacilitiesList = new List<SportsFacilityModel>();
-            // takie rzeczy robi się LINQ
             var sportsFacilitesList = context.SportsFacilities
                                              .Select(s => assembler.ToSportsFacilityModel(s))
                                              .ToList();
-            //foreach (var item in context.SportsFacilities)
-            //{
-            //    // od tego jest assembler
-            //    SportFacilitiesList.Add(new SportsFacilityModel()
-            //    {
-            //        Id = item.Id,
-            //        Street = item.Street,
-            //        Number = item.Number,
-            //        District = item.District,
-            //        Description = item.Description
-            //    });
-            //}
-            // to najlepiej sprawdzić na początku
-            //if (SportFacilitiesList.Count == 0)
-            //{
-            //    return NotFound();
-            //}
             return Ok(sportsFacilitesList);
         }
 
-        // powinno brać model, nie encję, do przerobienia na encję trzeba dopisać metodę do assemblera
+        // powinno brać model, nie encję, do przerobienia na encję trzeba dopisać metodę do assemblera OK
         [HttpPost]
-        public IHttpActionResult Post(SportFacilityPlusModel sportsFacility) // zmienic
+        public IHttpActionResult Post(SportFacilityPlusModel sportsFacility)
         {
             if (context.SportsFacilities.Find(sportsFacility.Id)==null)
             {
                 return BadRequest();
             }
-            context.SportsFacilities.Add(new SportsFacility()
-            {
-                Id = sportsFacility.Id,
-                Description = sportsFacility.Description,
-                District = sportsFacility.District,
-                Number = sportsFacility.Number,
-                PhoneNumber = sportsFacility.PhoneNumber,
-                Position = sportsFacility.Position,
-                Street = sportsFacility.Street,
-                Type = sportsFacility.Type,
-                Website = sportsFacility.Website
-            });
+            context.SportsFacilities.Add(assembler.ToSportsFacilityFromPlusModel(sportsFacility));
             context.SaveChanges();
             return Ok(sportsFacility);
         }

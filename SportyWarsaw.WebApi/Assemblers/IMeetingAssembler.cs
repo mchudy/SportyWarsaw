@@ -6,5 +6,7 @@ namespace SportyWarsaw.WebApi.Assemblers
     {
         MeetingModel ToMeetingModel(Meeting entity);
         MeetingPlusModel ToMeetingPlusModel(Meeting entity);
+        Meeting ToMeetingFromPlusModel(MeetingPlusModel model);
+        Meeting ToMeetingFromModel(MeetingModel model);
     }
 }
