@@ -184,7 +184,7 @@
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
-    <Content Include="AppSettingsSecrets.config" />
+    <None Include="AppSettingsSecrets.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Web.config" />
