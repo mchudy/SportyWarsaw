@@ -14,7 +14,8 @@ namespace SportyWarsaw.WebApi.Assemblers
                 Description = entity.Description,
                 District = entity.District,
                 Number = entity.Number,
-                Street = entity.Street
+                Street = entity.Street,
+                Type = entity.Type
             };
         }
 

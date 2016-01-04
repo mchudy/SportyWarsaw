@@ -1,6 +1,8 @@
 ﻿using SportyWarsaw.Domain.Enums;
 using System;
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace SportyWarsaw.WebApi.Models
 {
@@ -19,6 +21,7 @@ namespace SportyWarsaw.WebApi.Models
         [Required]
         public DateTime EndTime { get; set; }
 
+        [JsonConverter(typeof(StringEnumConverter))]
         public SportType SportType { get; set; }
 
         public decimal? Cost { get; set; }

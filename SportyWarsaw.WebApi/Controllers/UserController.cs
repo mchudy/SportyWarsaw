@@ -4,6 +4,7 @@ using SportyWarsaw.Domain.Entities;
 using SportyWarsaw.WebApi.Assemblers;
 using SportyWarsaw.WebApi.Models;
 using System;
+using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Web.Http;
@@ -37,7 +38,9 @@ namespace SportyWarsaw.WebApi.Controllers
         [Route("{username}/Details"), HttpGet]
         public IHttpActionResult GetDetails(string username)
         {
-            User user = context.Users.FirstOrDefault(u => u.UserName == username);
+            User user = context.Users
+                .Include(e => e.Meetings)
+                .FirstOrDefault(u => u.UserName == username);
             if (user == null)
             {
                 return NotFound();

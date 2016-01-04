@@ -9,11 +9,11 @@ namespace SportyWarsaw.WebApi.Models
         public byte[] Picture { get; set; }
         public string Username { get; set; }
 
-        public IList<MeetingPlusModel> Meetings { get; set; }
+        public IList<MeetingModel> Meetings { get; set; } = new List<MeetingModel>();
 
-        public IList<FriendshipModel> FriendshipsInitiated { get; set; }
+        public IList<FriendshipModel> FriendshipsInitiated { get; set; } = new List<FriendshipModel>();
 
-        public IList<FriendshipModel> FriendshipsRequested { get; set; }
+        public IList<FriendshipModel> FriendshipsRequested { get; set; } = new List<FriendshipModel>();
 
     }
 }

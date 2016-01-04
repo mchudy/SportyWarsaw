@@ -213,3 +213,5 @@ ModelManifest.xml
 
 # Secret settings
 SportyWarsaw.WebApi/AppSettingsSecrets.config
+
+SportyWarsaw.WebApi/Properties/PublishProfiles

@@ -24,12 +24,13 @@ namespace SportyWarsaw.WebApi.Assemblers
             {
                 FirstName = entity.FirstName,
                 LastName = entity.LastName,
-                Username = entity.UserName
+                Username = entity.UserName,
+                Picture = entity.Picture
             };
 
             foreach (var item in entity.Meetings)
             {
-                userPlusModel.Meetings.Add(meeting.ToMeetingPlusModel(item));
+                userPlusModel.Meetings.Add(meeting.ToMeetingModel(item));
             }
 
             foreach (var item in entity.FriendshipsInitiated)

@@ -1,4 +1,6 @@
-﻿using SportyWarsaw.Domain.Entities;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using SportyWarsaw.Domain.Entities;
 using SportyWarsaw.Domain.Enums;
 using System.Collections.Generic;
 
@@ -15,6 +17,8 @@ namespace SportyWarsaw.WebApi.Models
         public string Website { get; set; }
         public IList<string> Emails { get; set; } = new List<string>();
         public Position Position { get; set; } = new Position();
+
+        [JsonConverter(typeof(StringEnumConverter))]
         public SportsFacilityType Type { get; set; }
     }
 }
