@@ -196,6 +196,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\IdentityModule.cs" />
+    <Compile Include="Models\AddCommentModel.cs" />
     <Compile Include="Models\AddMeetingModel.cs" />
     <Compile Include="Models\ChangeMeetingModel.cs" />
     <Compile Include="Models\CommentModel.cs" />
