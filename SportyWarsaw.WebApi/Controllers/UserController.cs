@@ -1,14 +1,12 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
 using SportyWarsaw.Domain;
 using SportyWarsaw.Domain.Entities;
 using SportyWarsaw.WebApi.Assemblers;
 using SportyWarsaw.WebApi.Models;
-using System.Collections.Generic;
+using System;
 using System.Data.Entity.Migrations;
-using System.Data.OleDb;
 using System.Linq;
 using System.Web.Http;
-using Microsoft.AspNet.Identity;
 
 namespace SportyWarsaw.WebApi.Controllers
 {
@@ -24,164 +22,171 @@ namespace SportyWarsaw.WebApi.Controllers
             this.assembler = assembler;
         }
 
-        public IHttpActionResult Get(int id)
+        [Route("{username}"), HttpGet]
+        public IHttpActionResult Get(string username)
         {
-            User facility = context.Users.Find(id);
-            if (facility == null)
+            User user = context.Users.FirstOrDefault(u => u.UserName == username);
+            if (user == null)
             {
                 return NotFound();
             }
-            UserModel dto = assembler.ToUserModel(facility);
+            UserModel dto = assembler.ToUserModel(user);
             return Ok(dto);
         }
 
-        [Route("{id}/Details"), HttpGet]
-        public IHttpActionResult GetDetails(int id)
+        [Route("{username}/Details"), HttpGet]
+        public IHttpActionResult GetDetails(string username)
         {
-            User facility = context.Users.Find(id);
-            if (facility == null)
+            User user = context.Users.FirstOrDefault(u => u.UserName == username);
+            if (user == null)
             {
                 return NotFound();
             }
-            UserPlusModel dto = assembler.ToUserPlusModel(facility);
-            return Ok(dto); // ok, meeting plus
+            UserPlusModel dto = assembler.ToUserPlusModel(user);
+            return Ok(dto);
         }
 
+        [Authorize]
         [Route("MyFriends"), HttpGet]
         public IHttpActionResult GetMyFriends()
         {
-            // poprawic !!
-            var myfriends1 =
-                context.Users.Find(User.Identity.GetUserId()).FriendshipsInitiated.Where(f => f.IsConfirmed).ToList();
-            var myfriends2 = context.Users.Find(User.Identity.GetUserId())
-                .FriendshipsRequested.Where(f => f.IsConfirmed).ToList();
-            
-            var myfriends = new List<Friendship>();
-            foreach (var item in myfriends1)
-            {
-                myfriends.Add(item);
-            }
-            foreach (var item in myfriends2)
-            {
-                myfriends.Add(item);
-            }
-            if (myfriends.Count == 0)
-            {
-                return NotFound();
-            }
+            var user = context.Users.Find(User.Identity.GetUserId());
+            var myfriends1 = user.FriendshipsInitiated
+                                 .Where(f => f.IsConfirmed)
+                                 .Select(f => assembler.ToUserModel(f.Friend));
+            var myfriends2 = user.FriendshipsRequested
+                                 .Where(f => f.IsConfirmed)
+                                 .Select(f => assembler.ToUserModel(f.Inviter));
+            var myfriends = myfriends1.Concat(myfriends2).ToList();
             return Ok(myfriends);
         }
 
+        [Authorize]
         [Route("MyPendingFriendRequests"), HttpGet]
         public IHttpActionResult GetMyPendingFriendRequests()
         {
-            var friendrequests =
-                context.Users.Find(User.Identity.GetUserId()).FriendshipsRequested.Where(f => f.IsConfirmed==false).ToList();
-            if (friendrequests.Count == 0)
-            {
-                return NotFound();
-            }
-            return Ok(friendrequests);
+            var user = context.Users.Find(User.Identity.GetUserId());
+            var users = user.FriendshipsRequested
+                               .Where(f => f.IsConfirmed == false)
+                               .Select(f => assembler.ToUserModel(f.Inviter))
+                               .ToList();
+            return Ok(users);
         }
 
+        [Authorize]
         [Route("MySentFriendRequests"), HttpGet]
         public IHttpActionResult GetMySentFriendRequests()
         {
-            var sentfriendrequests =
-                context.Users.Find(User.Identity.GetUserId()).FriendshipsInitiated.Where(f => f.IsConfirmed == false).ToList();
-            if (sentfriendrequests.Count == 0)
-            {
-                return NotFound();
-            }
-            return Ok(sentfriendrequests);
+            var user = context.Users.Find(User.Identity.GetUserId());
+            var users = user.FriendshipsInitiated
+                               .Where(f => f.IsConfirmed == false)
+                               .Select(f => assembler.ToUserModel(f.Friend))
+                               .ToList();
+            return Ok(users);
         }
 
-        [Route("SendFriendRequest/{id}"), HttpPost]
-        public IHttpActionResult SendFriendRequest(int id) // id usera do ktorego wysylamy
+        [Authorize]
+        [Route("SendFriendRequest/{username}"), HttpPost]
+        public IHttpActionResult SendFriendRequest(string username)
         {
             User inviter = context.Users.Find(User.Identity.GetUserId());
             if (inviter == null)
             {
                 return BadRequest();
             }
-            User friend = context.Users.Find(id);
+            User friend = context.Users.FirstOrDefault(u => u.UserName == username);
             if (friend == null)
             {
                 return BadRequest();
             }
-            Friendship nowa = new Friendship()
+            // if already friends
+            if (inviter.FriendshipsInitiated.Any(f => f.Friend.UserName == username) ||
+                inviter.FriendshipsRequested.Any(f => f.Inviter.UserName == username))
+            {
+                return BadRequest();
+            }
+            Friendship friendship = new Friendship()
             {
                 CreatedTime = DateTime.Now,
                 Inviter = inviter,
-                InviterId = inviter.Id,
                 Friend = friend,
-                FriendId = friend.Id,
                 IsConfirmed = false
             };
-            context.Users.Find(id).FriendshipsRequested.Add(nowa);
-            context.Users.Find(User.Identity.GetUserId()).FriendshipsInitiated.Add(nowa);
-            return Ok();
-        }
-
-        [Route("AcceptFriendRequest/{id}"), HttpPost]
-        public IHttpActionResult AcceptFriendRequest(int id) // id usera od ktorego dostajemy
-        {
-            context.Users.Find(User.Identity.GetUserId()).FriendshipsRequested.First(f => f.FriendId == id.ToString()).IsConfirmed
-                = true;
-            context.Users.Find(id).FriendshipsInitiated.First(f => f.FriendId == User.Identity.GetUserId()).IsConfirmed
-                = true;
-            return Ok();
-        }
-
-        [Route("RejectFriendRequest/{id}"), HttpPost]
-        public IHttpActionResult RejectFriendRequest(int id) // id usera do ktorego wysylamy
-        {
-            Friendship to_delete1 = context.Users.Find(User.Identity.GetUserId()).FriendshipsRequested.First(f => f.FriendId == id.ToString());
-            if (to_delete1 == null)
-            {
-                return NotFound();
-            }
-            Friendship to_delete2 =
-                context.Users.Find(id).FriendshipsInitiated.First(f => f.FriendId == User.Identity.GetUserId());
-            if (to_delete2 == null)
-            {
-                return NotFound();
-            }
-
-            context.Users.Find(id).FriendshipsInitiated.Remove(to_delete2);
-            context.Users.Find(User.Identity.GetUserId()).FriendshipsRequested.Remove(to_delete1);
+            inviter.FriendshipsInitiated.Add(friendship);
             context.SaveChanges();
             return Ok();
-
         }
 
-        [HttpPut]
-        public IHttpActionResult Put(UserModel userFacility)
+        [Authorize]
+        [Route("AcceptFriendRequest/{username}"), HttpPost]
+        public IHttpActionResult AcceptFriendRequest(string username)
         {
-            var oldFacility = context.Users.Find(userFacility);
-            if (oldFacility == null)
+            var user = context.Users.Find(User.Identity.GetUserId());
+            var friendship = user.FriendshipsRequested.FirstOrDefault(f => f.Friend.UserName == username);
+            if (friendship == null)
             {
                 return BadRequest();
             }
-            // poprawki danych
-            oldFacility.FirstName = userFacility.FirstName;
-            oldFacility.LastName = userFacility.LastName;
-            context.Users.AddOrUpdate(oldFacility);
+            friendship.IsConfirmed = true;
             context.SaveChanges();
             return Ok();
         }
 
+        [Authorize]
+        [Route("RemoveFriend/{username}"), HttpPost]
+        public IHttpActionResult RejectFriendRequest(string username)
+        {
+            var user = context.Users.Find(User.Identity.GetUserId());
+            Friendship friendship1 = user.FriendshipsRequested.FirstOrDefault(f => f.Inviter.UserName == username);
+            if (friendship1 != null)
+            {
+                user.FriendshipsRequested.Remove(friendship1);
+                context.SaveChanges();
+                return Ok();
+            }
+            Friendship friendship2 = user.FriendshipsInitiated.FirstOrDefault(f => f.Friend.UserName == username);
+            if (friendship2 == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                user.FriendshipsInitiated.Remove(friendship2);
+                context.SaveChanges();
+                return Ok();
+            }
+        }
+
+        [Authorize]
+        [Route("UpdateProfile"), HttpPost]
+        public IHttpActionResult Put(UserPlusModel dto)
+        {
+            User user = context.Users.FirstOrDefault(u => u.UserName == dto.Username);
+            if (user == null)
+            {
+                return BadRequest();
+            }
+            user.FirstName = user.FirstName;
+            user.LastName = user.LastName;
+            user.Picture = user.Picture;
+
+            context.Users.AddOrUpdate(user);
+            context.SaveChanges();
+            return Ok();
+        }
+
+        [Authorize(Roles = "Admin")]
         [HttpDelete]
-        public IHttpActionResult Delete(int id)
+        public IHttpActionResult Delete(string username)
         {
-            var oldFacility = context.Users.Find(id);
-            if (oldFacility == null)
+            User user = context.Users.FirstOrDefault(u => u.UserName == username);
+            if (user == null)
             {
                 return BadRequest();
             }
-            context.Users.Remove(oldFacility);
+            context.Users.Remove(user);
             context.SaveChanges();
-            return Ok(oldFacility);
+            return Ok(user);
         }
     }
 }

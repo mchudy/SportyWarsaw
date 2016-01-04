@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web;
-using SportyWarsaw.Domain.Entities;
+﻿using SportyWarsaw.Domain.Entities;
 using SportyWarsaw.WebApi.Models;
 
 namespace SportyWarsaw.WebApi.Assemblers
@@ -12,12 +7,13 @@ namespace SportyWarsaw.WebApi.Assemblers
     {
         public CommentModel ToCommentModel(Comment entity)
         {
-            return new CommentModel()
+            return new CommentModel
             {
                 Id = entity.Id,
                 Date = entity.Date,
                 Text = entity.Text,
-                UserId = entity.User.Id
+                Username = entity.User.UserName,
+                MeetingId = entity.Meeting.Id
             };
         }
 

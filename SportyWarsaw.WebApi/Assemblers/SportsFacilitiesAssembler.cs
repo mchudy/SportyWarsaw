@@ -1,6 +1,6 @@
-﻿using System.Data.Entity.Core.Metadata.Edm;
-using SportyWarsaw.Domain.Entities;
+﻿using SportyWarsaw.Domain.Entities;
 using SportyWarsaw.WebApi.Models;
+using System.Linq;
 
 namespace SportyWarsaw.WebApi.Assemblers
 {
@@ -17,8 +17,10 @@ namespace SportyWarsaw.WebApi.Assemblers
                 Street = entity.Street
             };
         }
+
         public SportFacilityPlusModel ToSportFacilityPlusModel(SportsFacility entity)
         {
+            if (entity == null) return null;
             return new SportFacilityPlusModel()
             {
                 Id = entity.Id,
@@ -29,7 +31,8 @@ namespace SportyWarsaw.WebApi.Assemblers
                 PhoneNumber = entity.PhoneNumber,
                 Position = entity.Position,
                 Website = entity.Website,
-                Type = entity.Type
+                Type = entity.Type,
+                Emails = entity.Emails.Select(e => e.Email).ToList()
             };
         }
 

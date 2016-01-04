@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using SportyWarsaw.Domain.Entities;
+﻿using SportyWarsaw.Domain.Entities;
 using SportyWarsaw.Domain.Enums;
+using System.Collections.Generic;
 
 namespace SportyWarsaw.WebApi.Models
 {
@@ -16,6 +13,7 @@ namespace SportyWarsaw.WebApi.Models
         public string District { get; set; }
         public string PhoneNumber { get; set; }
         public string Website { get; set; }
+        public IList<string> Emails { get; set; } = new List<string>();
         public Position Position { get; set; } = new Position();
         public SportsFacilityType Type { get; set; }
     }

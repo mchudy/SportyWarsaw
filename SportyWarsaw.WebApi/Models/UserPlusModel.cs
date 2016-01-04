@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using SportyWarsaw.Domain.Entities;
+﻿using System.Collections.Generic;
 
 namespace SportyWarsaw.WebApi.Models
 {
@@ -10,17 +6,14 @@ namespace SportyWarsaw.WebApi.Models
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public ICollection<MeetingPlusModel> Meetings { get; set; } 
+        public byte[] Picture { get; set; }
+        public string Username { get; set; }
 
-        /// <summary>
-        /// Friendships that the user initiated himself (i.e. he sent the friend request)
-        /// </summary>
-        public ICollection<FriendshipModel> FriendshipsInitiated { get; set; } 
+        public IList<MeetingPlusModel> Meetings { get; set; }
 
-        /// <summary>
-        /// Friendships that were requested from the user (i.e. he received the friend request)
-        /// </summary>
-        public  ICollection<FriendshipModel> FriendshipsRequested { get; set; }
+        public IList<FriendshipModel> FriendshipsInitiated { get; set; }
+
+        public IList<FriendshipModel> FriendshipsRequested { get; set; }
 
     }
 }

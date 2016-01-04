@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using SportyWarsaw.Domain;
+using SportyWarsaw.Domain.Entities;
+using SportyWarsaw.WebApi.Assemblers;
+using SportyWarsaw.WebApi.Models;
+using System;
 using System.Data.Entity.Migrations;
 using System.Linq;
-using Microsoft.AspNet.Identity;
-using Microsoft.Owin.Security;
-using SportyWarsaw.Domain.Entities;
-using SportyWarsaw.WebApi.Infrastructure;
-using SportyWarsaw.WebApi.Models;
-using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.UI.WebControls;
-using SportyWarsaw.Domain;
-using SportyWarsaw.WebApi.Assemblers;
 
 namespace SportyWarsaw.WebApi.Controllers
 {
@@ -26,6 +20,7 @@ namespace SportyWarsaw.WebApi.Controllers
             this.context = context;
             this.assembler = assembler;
         }
+
         [HttpGet]
         public IHttpActionResult Get(int id)
         {
@@ -37,31 +32,29 @@ namespace SportyWarsaw.WebApi.Controllers
             CommentModel dto = assembler.ToCommentModel(facility);
             return Ok(dto);
         }
-        [Route("{meetingid}"), HttpGet]
-        public IHttpActionResult GetAll(int meetingid)
+
+        [Route("meeting/{meetingId}"), HttpGet]
+        public IHttpActionResult GetAll(int meetingId)
         {
-            var list_comments = context.Meetings.Find(meetingid).Comments.ToList();
-            //przerobie na dto
-            var outlist = new List<CommentModel>();
-            foreach (var item in list_comments)
-            {
-                outlist.Add(assembler.ToCommentModel(item));
-            }
-            // to do
-            return Ok(outlist);
+            var comments = context.Meetings.Find(meetingId).Comments
+                                  .AsEnumerable()
+                                  .Select(c => assembler.ToCommentModel(c));
+            return Ok(comments);
         }
 
+        [Authorize]
         [HttpPut]
         public IHttpActionResult Put(CommentModel commentFacility)
         {
-            // jak to zmienic w jedno zapytanie?
             var oldFacility = context.Comments.Find(commentFacility.Id);
             if (oldFacility == null)
             {
-                return BadRequest();
+                return NotFound();
             }
-            oldFacility.Date = commentFacility.Date;
-            oldFacility.Id = commentFacility.Id;
+            if (oldFacility.User.UserName != User.Identity.Name)
+            {
+                return Unauthorized();
+            }
             oldFacility.Text = commentFacility.Text;
 
             context.Comments.AddOrUpdate(oldFacility);
@@ -69,41 +62,43 @@ namespace SportyWarsaw.WebApi.Controllers
             return Ok(commentFacility);
         }
 
+        [Authorize]
         [HttpPost]
-        public IHttpActionResult Post(CommentModel commentFacility)
+        public IHttpActionResult Post(AddCommentModel commentModel)
         {
-            if (context.SportsFacilities.Find(commentFacility.Id) == null)
+            var meeting = context.Meetings.Find(commentModel.MeetingId);
+            if (meeting == null)
             {
                 return BadRequest();
             }
-            User currentUser = context.Users.Find(commentFacility.UserId);
-            if (currentUser == null)
-            {
-                return BadRequest();
-            }
+            var currentUser = context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
             context.Comments.Add(new Comment()
             {
                 User = currentUser,
-                Id = commentFacility.Id,
                 Date = DateTime.Now,
-                Text = commentFacility.Text
+                Text = commentModel.Text,
+                Meeting = meeting
             });
             context.SaveChanges();
-            return Ok(commentFacility);
+            return Ok(commentModel);
         }
 
+        [Authorize]
         [HttpDelete]
         public IHttpActionResult Delete(int id)
         {
-            // jak to zmienic w jedno zapytanie?
-            var oldFacility = context.Comments.Find(id);
-            if (oldFacility == null)
+            var comment = context.Comments.Find(id);
+            if (comment == null)
             {
-                return BadRequest();
-            }    
-            context.Comments.Remove(oldFacility);
+                return NotFound();
+            }
+            if (comment.User.UserName != User.Identity.Name)
+            {
+                return Unauthorized();
+            }
+            context.Comments.Remove(comment);
             context.SaveChanges();
-            return Ok(oldFacility);
+            return Ok(comment);
         }
     }
 }

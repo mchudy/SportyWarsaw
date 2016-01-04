@@ -1,25 +1,28 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNet.Identity;
 using SportyWarsaw.Domain;
 using SportyWarsaw.Domain.Entities;
 using SportyWarsaw.WebApi.Assemblers;
 using SportyWarsaw.WebApi.Models;
+using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Web.Http;
-using SportyWarsaw.Domain.Enums;
 
 namespace SportyWarsaw.WebApi.Controllers
 {
     [RoutePrefix("api/Meetings")]
-    public class MeetingController : ApiController
+    public class MeetingsController : ApiController
     {
         private readonly SportyWarsawContext context;
         private readonly IMeetingAssembler assembler;
+        private readonly IUserAssembler userAssembler;
 
-        public MeetingController(SportyWarsawContext context, IMeetingAssembler assembler)
+        public MeetingsController(SportyWarsawContext context, IMeetingAssembler assembler,
+            IUserAssembler userAssembler)
         {
             this.context = context;
             this.assembler = assembler;
+            this.userAssembler = userAssembler;
         }
 
         public IHttpActionResult Get(int id)
@@ -36,144 +39,136 @@ namespace SportyWarsaw.WebApi.Controllers
         [Route("{id}/Details"), HttpGet]
         public IHttpActionResult GetDetails(int id)
         {
-            Meeting facility = context.Meetings.Find(id);
+            Meeting facility = context.Meetings.Include(m => m.SportsFacility)
+                .FirstOrDefault(m => m.Id == id);
             if (facility == null)
             {
                 return NotFound();
             }
             MeetingPlusModel dto = assembler.ToMeetingPlusModel(facility);
-            return Ok(dto); // ok, meeting plus
+            return Ok(dto);
         }
 
         [Route("{id}/Participants"), HttpGet]
         public IHttpActionResult GetParticipants(int id)
         {
-            UserAssembler user_assembler = new UserAssembler();
-            var lista = context.Meetings.Find(id).Participants.ToList();
-            if (lista.Count == 0)
-            {
-                return BadRequest();
-            }
-            var outlist = new List<UserModel>();
-            foreach (var item in lista)
-            {
-                outlist.Add(user_assembler.ToUserModel(item));
-            }
-            return Ok(outlist);
+            var participants = context.Meetings.Find(id).Participants.ToList()
+                                      .Select(p => userAssembler.ToUserModel(p));
+            return Ok(participants);
         }
 
+        [Authorize]
         [Route("MyMeetings"), HttpGet]
-        public IHttpActionResult GetMyMeetings(int id)
+        public IHttpActionResult GetMyMeetings()
         {
+            var myUsername = User.Identity.GetUserName();
             var mymeetings =
-                context.Meetings.Where(f => f.Organizer.Id == User.Identity.ToString())
-                    .Select(s => assembler.ToMeetingModel(s)).ToList();
-            if (mymeetings.Count == 0)
-            {
-                return BadRequest();
-            }
+                context.Meetings.Where(m => m.Participants.Any(u => u.UserName == myUsername))
+                                .AsEnumerable()
+                                .Select(m => assembler.ToMeetingModel(m));
             return Ok(mymeetings);
         }
-        [Route("{id}/JoinMeeting"), HttpPost]
+
+        [Authorize]
+        [Route("Join/{id}"), HttpPost]
         public IHttpActionResult JoinMeeting(int id)
         {
-            if (context.Meetings.Find(id) == null)
+            var user = context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
+            var meeting = context.Meetings.Find(id);
+            if (meeting == null)
+            {
+                return NotFound();
+            }
+            if (meeting.Participants.Any(u => u.UserName == user.UserName))
             {
                 return BadRequest();
             }
-            User newUser = context.Users.Find(User.Identity.ToString());
-            if (newUser == null)
-            {
-                return BadRequest();
-            }
-            context.Meetings.Find(id).Participants.Add(newUser);
-            context.SaveChanges();
-            return Ok(id);
-        }
-        [Route("{id}/LeaveMeeting"), HttpPost]
-        public IHttpActionResult LeaveMeeting(int id)
-        {
-            if (context.Meetings.Find(id) == null)
-            {
-                return BadRequest();
-            }
-            User newUser = context.Users.Find(User.Identity);
-            if (newUser == null)
-            {
-                return BadRequest();
-            }
-            context.Meetings.Find(id).Participants.Remove(newUser);
-            context.SaveChanges();
-            return Ok(id);
-        }
-        [HttpPost]
-        public IHttpActionResult Post(MeetingPlusModel meetingFacility) // new meeting
-        {
-            SportsFacilitiesAssembler assembler = new SportsFacilitiesAssembler();
-            if (context.Meetings.Find(meetingFacility.Id) == null)
-            {
-                return BadRequest();
-            }
-            SportsFacility facility = context.SportsFacilities.Find(meetingFacility.SportsFacility.Id);
-            if (facility == null)
-            {
-                return BadRequest();
-            }
-            User organizer = context.Meetings.Find(meetingFacility.Id).Organizer;
-            if (organizer == null)
-            {
-                return BadRequest();
-            }
-            context.Meetings.Add(new Meeting()
-            {
-                SportsFacility = facility,
-                Id = meetingFacility.Id,
-                Title = meetingFacility.Title,
-                Description = meetingFacility.Description,
-                Cost = meetingFacility.Cost,
-                EndTime = meetingFacility.EndTime,
-                MaxParticipants = meetingFacility.MaxParticipants,
-                Organizer = organizer,
-                SportType = meetingFacility.SportType,
-                StartTime = meetingFacility.StartTime,
-            });
-            context.SaveChanges();
-            return Ok(meetingFacility);
-        }
-
-        [HttpPut]
-        public IHttpActionResult Put(MeetingModel meetingFacility)
-        {
-            // jak to zmienic w jedno zapytanie?
-            var oldFacility = context.Meetings.Find(meetingFacility.Id);
-            if (oldFacility == null)
-            {
-                return BadRequest();
-            }
-            // poprawki danych
-            oldFacility.Cost = meetingFacility.Cost;
-            oldFacility.Title = meetingFacility.Title;
-            oldFacility.EndTime = meetingFacility.EndTime;
-            oldFacility.StartTime = meetingFacility.StartTime;
-            oldFacility.Id = meetingFacility.Id;
-            oldFacility.MaxParticipants = meetingFacility.MaxParticipants;
-            oldFacility.SportType = meetingFacility.SportType;
-            context.Meetings.AddOrUpdate(oldFacility);
+            meeting.Participants.Add(user);
             context.SaveChanges();
             return Ok();
         }
 
-        [HttpDelete]
-        public IHttpActionResult Delete(int id)
+        [Authorize]
+        [Route("Leave/{id}"), HttpPost]
+        public IHttpActionResult LeaveMeeting(int id)
         {
-            var oldFacility = context.Meetings.Find(id);
-            if (oldFacility == null)
+            var user = context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
+            var meeting = context.Meetings.Find(id);
+            if (meeting == null)
+            {
+                return NotFound();
+            }
+            if (meeting.Participants.All(u => u.UserName != user.UserName))
             {
                 return BadRequest();
             }
-            context.Meetings.Remove(oldFacility);
+            meeting.Participants.Remove(user);
             context.SaveChanges();
-            return Ok(oldFacility);
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IHttpActionResult Post(AddMeetingModel meetingModel)
+        {
+            SportsFacility facility = context.SportsFacilities.Find(meetingModel.SportsFacilityId);
+            if (facility == null)
+            {
+                return BadRequest();
+            }
+            User organizer = context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
+            context.Meetings.Add(new Meeting
+            {
+                SportsFacility = facility,
+                Title = meetingModel.Title,
+                Description = meetingModel.Description,
+                Cost = meetingModel.Cost,
+                EndTime = meetingModel.EndTime,
+                MaxParticipants = meetingModel.MaxParticipants,
+                Organizer = organizer,
+                SportType = meetingModel.SportType,
+                StartTime = meetingModel.StartTime,
+            });
+            context.SaveChanges();
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPut]
+        public IHttpActionResult Put(ChangeMeetingModel meetingModel)
+        {
+            var user = context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
+            var meeting = context.Meetings.Find(meetingModel.Id);
+            if (meeting == null || user.UserName != meeting.Organizer.UserName)
+            {
+                return Unauthorized();
+            }
+            meeting.Cost = meetingModel.Cost;
+            meeting.Title = meetingModel.Title;
+            meeting.EndTime = meetingModel.EndTime;
+            meeting.StartTime = meetingModel.StartTime;
+            meeting.MaxParticipants = meetingModel.MaxParticipants;
+            meeting.SportType = meetingModel.SportType;
+            meeting.SportsFacility = context.SportsFacilities.Find(meetingModel.SportsFacilityId);
+
+            context.Meetings.AddOrUpdate(meeting);
+            context.SaveChanges();
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpDelete]
+        public IHttpActionResult Delete(int id)
+        {
+            var user = context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
+            var meeting = context.Meetings.Find(id);
+            if (meeting == null || user.UserName != meeting.Organizer.UserName)
+            {
+                return Unauthorized();
+            }
+            context.Meetings.Remove(meeting);
+            context.SaveChanges();
+            return Ok(meeting);
         }
     }
 }

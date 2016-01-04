@@ -172,7 +172,7 @@
     <Compile Include="Controllers\MeetingController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Infrastructure\AssemblersModule.cs" />
-    <Compile Include="Assemblers\SportsFacilityAssembler.cs" />
+    <Compile Include="Assemblers\SportsFacilitiesAssembler.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Filters\RequireHttpsAttribute.cs" />
     <Compile Include="Infrastructure\ApplicationUserManager.cs" />
@@ -196,6 +196,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\IdentityModule.cs" />
+    <Compile Include="Models\AddMeetingModel.cs" />
+    <Compile Include="Models\ChangeMeetingModel.cs" />
     <Compile Include="Models\CommentModel.cs" />
     <Compile Include="Models\FriendshipModel.cs" />
     <Compile Include="Models\MeetingModel.cs" />

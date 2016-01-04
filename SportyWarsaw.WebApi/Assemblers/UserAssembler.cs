@@ -1,17 +1,17 @@
-﻿using System.Data.Entity.Core.Metadata.Edm;
-using SportyWarsaw.Domain.Entities;
+﻿using SportyWarsaw.Domain.Entities;
 using SportyWarsaw.WebApi.Models;
 
 namespace SportyWarsaw.WebApi.Assemblers
 {
-    public class UserAssembler
+    public class UserAssembler : IUserAssembler
     {
         public UserModel ToUserModel(User entity)
         {
-            return new UserModel()
+            return new UserModel
             {
                 FirstName = entity.FirstName,
-                LastName = entity.LastName
+                LastName = entity.LastName,
+                Username = entity.UserName
             };
         }
 
@@ -23,7 +23,8 @@ namespace SportyWarsaw.WebApi.Assemblers
             UserPlusModel userPlusModel = new UserPlusModel()
             {
                 FirstName = entity.FirstName,
-                LastName = entity.LastName
+                LastName = entity.LastName,
+                Username = entity.UserName
             };
 
             foreach (var item in entity.Meetings)
@@ -40,15 +41,6 @@ namespace SportyWarsaw.WebApi.Assemblers
             {
                 userPlusModel.FriendshipsRequested.Add(friendship.ToFriendshipModel(item));
             }
-            //return new UserPlusModel()
-            //{
-            //    FirstName = entity.FirstName,
-            //    LastName = entity.LastName,
-            //    Meetings = entity.Meetings,
-            //    FriendshipsInitiated = entity.FriendshipsInitiated,
-            //    FriendshipsRequested = entity.FriendshipsRequested
-            //};
-
             return userPlusModel;
         }
 
