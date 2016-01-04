@@ -46,6 +46,10 @@ namespace SportyWarsaw.WebApi.Controllers
         [HttpPut]
         public IHttpActionResult Put(CommentModel commentFacility)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var oldFacility = context.Comments.Find(commentFacility.Id);
             if (oldFacility == null)
             {
@@ -66,6 +70,10 @@ namespace SportyWarsaw.WebApi.Controllers
         [HttpPost]
         public IHttpActionResult Post(AddCommentModel commentModel)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var meeting = context.Meetings.Find(commentModel.MeetingId);
             if (meeting == null)
             {

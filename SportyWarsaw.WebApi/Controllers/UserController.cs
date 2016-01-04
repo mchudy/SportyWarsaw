@@ -164,6 +164,10 @@ namespace SportyWarsaw.WebApi.Controllers
         [Route("UpdateProfile"), HttpPost]
         public IHttpActionResult Put(UserPlusModel dto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             User user = context.Users.FirstOrDefault(u => u.UserName == dto.Username);
             if (user == null)
             {

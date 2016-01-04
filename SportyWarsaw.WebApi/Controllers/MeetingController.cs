@@ -111,6 +111,10 @@ namespace SportyWarsaw.WebApi.Controllers
         [HttpPost]
         public IHttpActionResult Post(AddMeetingModel meetingModel)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             SportsFacility facility = context.SportsFacilities.Find(meetingModel.SportsFacilityId);
             if (facility == null)
             {
@@ -137,6 +141,10 @@ namespace SportyWarsaw.WebApi.Controllers
         [HttpPut]
         public IHttpActionResult Put(ChangeMeetingModel meetingModel)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var user = context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
             var meeting = context.Meetings.Find(meetingModel.Id);
             if (meeting == null || user.UserName != meeting.Organizer.UserName)
