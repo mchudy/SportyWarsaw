@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using SportyWarsaw.WebApi.Filters;
 using System.Linq;
@@ -28,6 +29,11 @@ namespace SportyWarsaw.WebApi
             var jsonFormatter = config.Formatters.OfType<JsonMediaTypeFormatter>().First();
             jsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             jsonFormatter.SerializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
+            IsoDateTimeConverter dateConverter = new IsoDateTimeConverter
+            {
+                DateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.fff'Z'"
+            };
+            jsonFormatter.SerializerSettings.Converters.Add(dateConverter);
 
 #if !DEBUG
             config.Filters.Add(new RequireHttpsAttribute());
