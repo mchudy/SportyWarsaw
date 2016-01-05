@@ -70,6 +70,18 @@ namespace SportyWarsaw.WebApi.Controllers
         }
 
         [Authorize]
+        [Route("NotMyMeetings"), HttpGet]
+        public IHttpActionResult GetNotMyMeetings()
+        {
+            var myUsername = User.Identity.GetUserName();
+            var mymeetings =
+                context.Meetings.Where(m => m.Participants.All(u => u.UserName != myUsername))
+                                .AsEnumerable()
+                                .Select(m => assembler.ToMeetingModel(m));
+            return Ok(mymeetings);
+        }
+
+        [Authorize]
         [Route("Join/{id}"), HttpPost]
         public IHttpActionResult JoinMeeting(int id)
         {
