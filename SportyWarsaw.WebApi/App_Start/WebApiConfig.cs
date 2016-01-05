@@ -1,8 +1,9 @@
-﻿using Newtonsoft.Json.Serialization;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using SportyWarsaw.WebApi.Filters;
 using System.Linq;
 using System.Net.Http.Formatting;
 using System.Web.Http;
-using SportyWarsaw.WebApi.Filters;
 
 namespace SportyWarsaw.WebApi
 {
@@ -26,6 +27,7 @@ namespace SportyWarsaw.WebApi
             // use camelCase in JSON
             var jsonFormatter = config.Formatters.OfType<JsonMediaTypeFormatter>().First();
             jsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            jsonFormatter.SerializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
 
 #if !DEBUG
             config.Filters.Add(new RequireHttpsAttribute());
