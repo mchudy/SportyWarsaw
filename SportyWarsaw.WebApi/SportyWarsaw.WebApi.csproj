@@ -201,6 +201,7 @@
     <Compile Include="Models\AddCommentModel.cs" />
     <Compile Include="Models\AddMeetingModel.cs" />
     <Compile Include="Models\ChangeMeetingModel.cs" />
+    <Compile Include="Models\ChangePasswordModel.cs" />
     <Compile Include="Models\CommentModel.cs" />
     <Compile Include="Models\FriendshipModel.cs" />
     <Compile Include="Models\MeetingModel.cs" />
