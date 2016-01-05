@@ -45,16 +45,19 @@ namespace SportyWarsaw.WebApi.Controllers
         }
 
         [Route("Page"), HttpGet]
-        public IHttpActionResult GetPageSize(int size, int index)
+        public IHttpActionResult GetPageSize(int size, int index, string nameFilter)
         {
-            var outlist = context.SportsFacilities
-                            .OrderBy(f => f.Id)
-                            .Skip((index - 1) * size)
-                            .Take(size)
-                            .AsEnumerable()
-                            .Select(f => assembler.ToSportsFacilityModel(f))
-                            .ToList();
-            // jeszcze jakies info o max ilosci stron ??
+            IQueryable<SportsFacility> query = context.SportsFacilities
+                .OrderBy(f => f.Id);
+            if (!string.IsNullOrEmpty(nameFilter))
+            {
+                query = query.Where(f => f.Description.StartsWith(nameFilter));
+            }
+            query = query.Skip((index - 1) * size)
+                         .Take(size);
+            var outlist = query.AsEnumerable()
+                               .Select(f => assembler.ToSportsFacilityModel(f))
+                               .ToList();
             return Ok(outlist);
         }
 
