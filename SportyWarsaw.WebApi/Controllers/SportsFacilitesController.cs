@@ -45,7 +45,7 @@ namespace SportyWarsaw.WebApi.Controllers
         }
 
         [Route("Page"), HttpGet]
-        public IHttpActionResult GetPageSize(int size, int index, string nameFilter)
+        public IHttpActionResult GetPageSize(int size, int index, string nameFilter = "")
         {
             IQueryable<SportsFacility> query = context.SportsFacilities
                 .OrderBy(f => f.Id);
