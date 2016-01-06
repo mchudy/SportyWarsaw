@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNet.Identity;
-using SportyWarsaw.Domain;
+﻿using SportyWarsaw.Domain;
 using SportyWarsaw.Domain.Entities;
 using SportyWarsaw.WebApi.Assemblers;
 using SportyWarsaw.WebApi.Models;
@@ -53,7 +52,7 @@ namespace SportyWarsaw.WebApi.Controllers
         [Route("MyFriends"), HttpGet]
         public IHttpActionResult GetMyFriends()
         {
-            var user = context.Users.Find(User.Identity.GetUserId());
+            var user = context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
             var myfriends1 = user.FriendshipsInitiated
                                  .Where(f => f.IsConfirmed)
                                  .Select(f => assembler.ToUserModel(f.Friend));
@@ -68,7 +67,7 @@ namespace SportyWarsaw.WebApi.Controllers
         [Route("MyPendingFriendRequests"), HttpGet]
         public IHttpActionResult GetMyPendingFriendRequests()
         {
-            var user = context.Users.Find(User.Identity.GetUserId());
+            var user = context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
             var users = user.FriendshipsRequested
                                .Where(f => f.IsConfirmed == false)
                                .Select(f => assembler.ToUserModel(f.Inviter))
@@ -80,7 +79,7 @@ namespace SportyWarsaw.WebApi.Controllers
         [Route("MySentFriendRequests"), HttpGet]
         public IHttpActionResult GetMySentFriendRequests()
         {
-            var user = context.Users.Find(User.Identity.GetUserId());
+            var user = context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
             var users = user.FriendshipsInitiated
                                .Where(f => f.IsConfirmed == false)
                                .Select(f => assembler.ToUserModel(f.Friend))
@@ -92,7 +91,7 @@ namespace SportyWarsaw.WebApi.Controllers
         [Route("SendFriendRequest/{username}"), HttpPost]
         public IHttpActionResult SendFriendRequest(string username)
         {
-            User inviter = context.Users.Find(User.Identity.GetUserId());
+            var inviter = context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
             if (inviter == null)
             {
                 return BadRequest();
@@ -124,7 +123,7 @@ namespace SportyWarsaw.WebApi.Controllers
         [Route("AcceptFriendRequest/{username}"), HttpPost]
         public IHttpActionResult AcceptFriendRequest(string username)
         {
-            var user = context.Users.Find(User.Identity.GetUserId());
+            var user = context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
             var friendship = user.FriendshipsRequested.FirstOrDefault(f => f.Friend.UserName == username);
             if (friendship == null)
             {
@@ -139,7 +138,7 @@ namespace SportyWarsaw.WebApi.Controllers
         [Route("RemoveFriend/{username}"), HttpPost]
         public IHttpActionResult RejectFriendRequest(string username)
         {
-            var user = context.Users.Find(User.Identity.GetUserId());
+            var user = context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
             Friendship friendship1 = user.FriendshipsRequested.FirstOrDefault(f => f.Inviter.UserName == username);
             if (friendship1 != null)
             {
