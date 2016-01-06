@@ -37,6 +37,7 @@ namespace SportyWarsaw.WebApi.Controllers
         public IHttpActionResult GetAll(int meetingId)
         {
             var comments = context.Meetings.Find(meetingId).Comments
+                                  .OrderByDescending(c => c.Date)
                                   .AsEnumerable()
                                   .Select(c => assembler.ToCommentModel(c));
             return Ok(comments);
