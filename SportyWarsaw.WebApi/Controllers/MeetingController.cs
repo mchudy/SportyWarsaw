@@ -58,6 +58,18 @@ namespace SportyWarsaw.WebApi.Controllers
         }
 
         [Authorize]
+        [Route("IsParticipant")]
+        public IHttpActionResult IsParticipant(int meetingId, string username)
+        {
+            var meeting = context.Meetings.Find(meetingId);
+            if (meeting == null)
+            {
+                BadRequest();
+            }
+            return Ok(meeting.Participants.Any(u => u.UserName == username));
+        }
+
+        [Authorize]
         [Route("MyMeetings"), HttpGet]
         public IHttpActionResult GetMyMeetings()
         {
