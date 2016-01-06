@@ -133,7 +133,7 @@ namespace SportyWarsaw.WebApi.Controllers
                 return BadRequest();
             }
             User organizer = context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
-            context.Meetings.Add(new Meeting
+            var newMeeting = new Meeting
             {
                 SportsFacility = facility,
                 Title = meetingModel.Title,
@@ -144,7 +144,9 @@ namespace SportyWarsaw.WebApi.Controllers
                 Organizer = organizer,
                 SportType = meetingModel.SportType,
                 StartTime = meetingModel.StartTime,
-            });
+            };
+            newMeeting.Participants.Add(organizer);
+            context.Meetings.Add(newMeeting);
             context.SaveChanges();
             return Ok();
         }
