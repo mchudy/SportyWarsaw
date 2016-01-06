@@ -124,7 +124,7 @@ namespace SportyWarsaw.WebApi.Controllers
         public IHttpActionResult AcceptFriendRequest(string username)
         {
             var user = context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
-            var friendship = user.FriendshipsRequested.FirstOrDefault(f => f.Friend.UserName == username);
+            var friendship = user.FriendshipsRequested.FirstOrDefault(f => f.Inviter.UserName == username);
             if (friendship == null)
             {
                 return BadRequest();
