@@ -57,8 +57,7 @@ namespace SportyWarsaw.WebApi.Controllers
             return Ok(participants);
         }
 
-        [Authorize]
-        [Route("IsParticipant")]
+        [Route("IsParticipant"), HttpGet]
         public IHttpActionResult IsParticipant(int meetingId, string username)
         {
             var meeting = context.Meetings.Find(meetingId);
