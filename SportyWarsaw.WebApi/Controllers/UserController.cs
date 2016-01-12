@@ -190,7 +190,7 @@ namespace SportyWarsaw.WebApi.Controllers
             }
             user.FirstName = dto.FirstName;
             user.LastName = dto.LastName;
-            user.Picture = Convert.FromBase64String(dto.Picture);
+            user.Picture = dto.Picture == null ? null : Convert.FromBase64String(dto.Picture);
 
             context.Users.AddOrUpdate(user);
             context.SaveChanges();
