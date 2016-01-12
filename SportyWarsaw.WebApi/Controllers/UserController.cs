@@ -176,7 +176,7 @@ namespace SportyWarsaw.WebApi.Controllers
         }
 
         [Authorize]
-        [HttpPut]
+        [Route(""), HttpPut]
         public IHttpActionResult Put(UserPlusModel dto)
         {
             if (!ModelState.IsValid)
