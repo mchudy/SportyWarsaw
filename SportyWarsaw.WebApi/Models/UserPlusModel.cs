@@ -6,7 +6,7 @@ namespace SportyWarsaw.WebApi.Models
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public byte[] Picture { get; set; }
+        public string Picture { get; set; }
         public string Username { get; set; }
 
         public IList<MeetingModel> Meetings { get; set; } = new List<MeetingModel>();

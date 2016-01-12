@@ -1,4 +1,5 @@
-﻿using SportyWarsaw.Domain.Entities;
+﻿using System;
+using SportyWarsaw.Domain.Entities;
 using SportyWarsaw.WebApi.Models;
 
 namespace SportyWarsaw.WebApi.Assemblers
@@ -25,7 +26,7 @@ namespace SportyWarsaw.WebApi.Assemblers
                 FirstName = entity.FirstName,
                 LastName = entity.LastName,
                 Username = entity.UserName,
-                Picture = entity.Picture
+                Picture = Convert.ToBase64String(entity.Picture)
             };
 
             foreach (var item in entity.Meetings)

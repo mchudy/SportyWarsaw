@@ -160,7 +160,7 @@ namespace SportyWarsaw.WebApi.Controllers
         }
 
         [Authorize]
-        [Route("UpdateProfile"), HttpPost]
+        [HttpPut]
         public IHttpActionResult Put(UserPlusModel dto)
         {
             if (!ModelState.IsValid)
@@ -172,9 +172,9 @@ namespace SportyWarsaw.WebApi.Controllers
             {
                 return BadRequest();
             }
-            user.FirstName = user.FirstName;
-            user.LastName = user.LastName;
-            user.Picture = user.Picture;
+            user.FirstName = dto.FirstName;
+            user.LastName = dto.LastName;
+            user.Picture = Convert.FromBase64String(dto.Picture);
 
             context.Users.AddOrUpdate(user);
             context.SaveChanges();
