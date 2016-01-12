@@ -34,6 +34,22 @@ namespace SportyWarsaw.WebApi.Controllers
             return Ok(dto);
         }
 
+        [Route("Page"), HttpGet]
+        public IHttpActionResult GetPageSize(int size, int index, string nameFilter = "")
+        {
+            IQueryable<User> query = context.Users.OrderBy(f => f.UserName);
+            if (!string.IsNullOrEmpty(nameFilter))
+            {
+                query = query.Where(f => f.UserName.StartsWith(nameFilter));
+            }
+            query = query.Skip((index - 1) * size)
+                         .Take(size);
+            var outlist = query.AsEnumerable()
+                               .Select(f => assembler.ToUserModel(f))
+                               .ToList();
+            return Ok(outlist);
+        }
+
         [Route("{username}/Details"), HttpGet]
         public IHttpActionResult GetDetails(string username)
         {
